@@ -1,21 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native-web';
+
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>This is Tuki</Text>
-      <Text>This is our first Mobile App</Text>
-      <StatusBar style="auto" />
-    </View>
+<View><Text>Home Screen</Text></View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
