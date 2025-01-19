@@ -5,6 +5,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>This is Tuki</Text>
+      <Text>This is our first Mobile App</Text>
       <StatusBar style="auto" />
     </View>
   );
