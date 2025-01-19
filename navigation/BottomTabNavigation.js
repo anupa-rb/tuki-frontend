@@ -33,7 +33,7 @@ const BottomTabNavigation = () => {
             tabBarIcon:({focused}) => {
                 return <Ionicons name ={focused ? "home" : "home-outline"} 
                 size={24}
-                color={focused ? black : gray}
+                //color={focused ? black : gray}
                 />
             }
         }}
@@ -45,7 +45,7 @@ const BottomTabNavigation = () => {
             tabBarIcon:({focused}) => {
                 return <Ionicons name ={"search-sharp"} 
                 size={24}
-                color={focused ? black : gray}
+                //color={focused ? black : gray}
                 />
             }
         }}
@@ -57,7 +57,7 @@ const BottomTabNavigation = () => {
             tabBarIcon:({focused}) => {
                 return <Ionicons name ={focused ? "person" : "person-outline"} 
                 size={24}
-                color={focused ? black : gray}
+                //color={focused ? black : gray}
                 />
             }
         }}
