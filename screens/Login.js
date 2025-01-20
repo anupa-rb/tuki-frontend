@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 
-export default function Login({navigation}) {
+export default function Login({ navigation }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -61,7 +61,7 @@ export default function Login({navigation}) {
           <View style={styles.formAction}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Bottom Navigation");
+                navigation.navigate("ChooseRole");
               }}
             >
               <View style={styles.btn}>
@@ -72,7 +72,7 @@ export default function Login({navigation}) {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("SignUp")
+              navigation.navigate("SignUp");
             }}
           >
             <Text style={styles.formFooter}>

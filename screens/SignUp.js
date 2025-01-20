@@ -97,7 +97,7 @@ export default function SignUp({ navigation }) {
           <View style={styles.formAction}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Bottom Navigation");
+                navigation.navigate("ChooseRole");
               }}
             >
               <View style={styles.btn}>

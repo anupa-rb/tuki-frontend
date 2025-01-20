@@ -9,6 +9,8 @@ import BottomTabNavigation from "./navigation/BottomTabNavigation";
 import FirstScreen from "./screens/FirstScreen";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
+import ChooseRole from "./screens/ChooseRole";
+import SecondScreen from "./screens/SecondScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +21,11 @@ export default function App() {
         <Stack.Screen
           name="First Screen"
           component={FirstScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SecondScreen"
+          component={SecondScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -34,6 +41,11 @@ export default function App() {
         <Stack.Screen
           name="SignUp"
           component={SignUp}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChooseRole"
+          component={ChooseRole}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
