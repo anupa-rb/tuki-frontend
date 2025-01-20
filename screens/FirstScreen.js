@@ -12,7 +12,7 @@ const FirstScreen = ({}) => {
     // Set a delay (e.g., 3 seconds) before navigating to the next screen
     const timer = setTimeout(() => {
       navigation.navigate("SecondScreen");
-    }, 2000); // Delay time in milliseconds (3000ms = 3 seconds)
+    }, 1000); // Delay time in milliseconds
 
     return () => clearTimeout(timer);
   }, [navigation]);

@@ -21,7 +21,7 @@ export default function ChooseRole({navigation}) {
         </View>
         <View style={styles.imageContainer}>
           <Image source={require("../assets/buyer.png")} style={styles.image} />
-          <Image source={require("../assets/buyer.png")} style={styles.image} />
+          <Image source={require("../assets/seller.png")} style={styles.image} />
         </View>
       </View>
       <View>
