@@ -9,7 +9,7 @@ import {
   Text,
 } from "react-native";
 
-export default function ChooseRole({navigation}) {
+export default function ChooseRole({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
@@ -20,20 +20,27 @@ export default function ChooseRole({navigation}) {
           <Text style={styles.header}>Choose your Role</Text>
         </View>
         <View style={styles.imageContainer}>
-          <Image source={require("../assets/buyer.png")} style={styles.image} />
-          <Image source={require("../assets/seller.png")} style={styles.image} />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Buyer Navigation");
+            }}
+          >
+            <Image
+              source={require("../assets/buyer.png")}
+              style={styles.image}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Seller Navigation");
+            }}
+          >
+            <Image
+              source={require("../assets/seller.png")}
+              style={styles.image}
+            />
+          </TouchableOpacity>
         </View>
-      </View>
-      <View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Bottom Navigation");
-          }}
-        >
-          <View style={styles.btn}>
-            <Text style={styles.btnText}>Confirm</Text>
-          </View>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -72,6 +79,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: 200,
     height: 200,
+  },
+  imageContainer: {
+    flexDirection: "row", // Align children in a row
+    justifyContent: "center", // Center horizontally
+    alignItems: "center", // Center vertically
+    marginVertical: 20, // Add vertical margin
   },
   btn: {
     backgroundColor: "#DC5440",

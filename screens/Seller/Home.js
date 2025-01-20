@@ -6,7 +6,8 @@ const Home = () => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Image source={require("../assets/LOGO.png")} style={styles.image} />
+        <Image source={require("../../assets/LOGO.png")} style={styles.image} />
+<Text>This is Seller</Text>
       </View>
     </SafeAreaView>
   );

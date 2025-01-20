@@ -5,7 +5,8 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 //import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
-import BottomTabNavigation from "./navigation/BottomTabNavigation";
+import BuyerTabNavigation from "./navigation/BuyerTabNavigation";
+import SellerTabNavigation from "./navigation/SellerTabNavigation";
 import FirstScreen from "./screens/FirstScreen";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
@@ -29,8 +30,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Bottom Navigation"
-          component={BottomTabNavigation}
+          name="Buyer Navigation"
+          component={BuyerTabNavigation}
+          options={{ headerShown: false }}
+        />
+                <Stack.Screen
+          name="Seller Navigation"
+          component={SellerTabNavigation}
           options={{ headerShown: false }}
         />
         <Stack.Screen

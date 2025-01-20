@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screens/Buyer/Home';
-import Search from '../screens/Buyer/Search';
-import Profile from '../screens/Buyer/Profile';
+import Home from '../screens/Seller/Home';
+import Search from '../screens/Seller/Search';
+import Profile from '../screens/Seller/Profile';
 import { Ionicons } from "@expo/vector-icons"
 
 
@@ -23,7 +23,7 @@ const screenOptions = {
     }
 }
 
-const BottomTabNavigation = () => {
+const SellerTabNavigation = () => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen 
@@ -66,4 +66,4 @@ const BottomTabNavigation = () => {
   )
 }
 
-export default BottomTabNavigation
+export default SellerTabNavigation
