@@ -48,7 +48,7 @@ const data = [
   },
 ];
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (event) => {
@@ -71,10 +71,11 @@ const Home = ({navigation}) => {
       <View style={styles.header}>
         <Image source={require("../../assets/LOGO.png")} style={styles.image} />
         <View style={styles.rightContainer}>
-          <TouchableOpacity style={{paddingHorizontal:10, alignSelf:'center'}}
-                      onPress={() => {
-                        navigation.navigate("Notification");
-                      }}
+          <TouchableOpacity
+            style={{ paddingHorizontal: 10, alignSelf: "center" }}
+            onPress={() => {
+              navigation.navigate("Notification");
+            }}
           >
             <FeatherIcon color="#6a99e3" name="bell" size={28} />
           </TouchableOpacity>
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: "contain",
-    alignSelf:'center',
+    alignSelf: "center",
   },
   carousel: {
     marginTop: 20,

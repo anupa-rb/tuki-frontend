@@ -12,6 +12,7 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import ChooseRole from "./screens/ChooseRole";
 import SecondScreen from "./screens/SecondScreen";
+import Notification from "./screens/Buyer/Notification";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,11 @@ export default function App() {
         <Stack.Screen
           name="ChooseRole"
           component={ChooseRole}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="Notification"
+          component={Notification}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
