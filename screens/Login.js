@@ -7,13 +7,47 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  // Simulated user data
+  const storedUser = {
+    email: "test@example.com",
+    password: "123456",
+  };
+
+  const loginHandler = async () => {
+    // Validate credentials
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill in both email and password");
+      return;
+    }
+
+    if (
+      form.email === storedUser.email &&
+      form.password === storedUser.password
+    ) {
+      try {
+        // Save "user data" in AsyncStorage
+        await AsyncStorage.setItem("user", JSON.stringify(storedUser));
+
+        Alert.alert("Success", "Logged in successfully!");
+        navigation.navigate("ChooseRole");
+      } catch (error) {
+        Alert.alert("Error", "Failed to store user data");
+      }
+    } else {
+      Alert.alert("Error", "Invalid email or password");
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
@@ -22,14 +56,12 @@ export default function Login({ navigation }) {
         </View>
         <View style={styles.header}>
           <Text style={styles.title}>Welcome back!</Text>
-
           <Text style={styles.subtitle}>Sign in to your account</Text>
         </View>
 
         <View style={styles.form}>
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Email address</Text>
-
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -45,7 +77,6 @@ export default function Login({ navigation }) {
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>
-
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -59,11 +90,7 @@ export default function Login({ navigation }) {
           </View>
 
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ChooseRole");
-              }}
-            >
+            <TouchableOpacity onPress={loginHandler}>
               <View style={styles.btn}>
                 <Text style={styles.btnText}>Sign in</Text>
               </View>
