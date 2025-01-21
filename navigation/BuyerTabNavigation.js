@@ -5,6 +5,8 @@ import Home from "../screens/Buyer/Home";
 import Search from "../screens/Buyer/Search";
 import Profile from "../screens/Buyer/Profile";
 import { Ionicons } from "@expo/vector-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Message from "../screens/Buyer/Message";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,6 +54,15 @@ const BuyerTabNavigation = () => {
                 //color={focused ? black : gray}
               />
             );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Message"
+        component={Message}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return <AntDesign name="message1" size={24} color="black" />;
           },
         }}
       />
