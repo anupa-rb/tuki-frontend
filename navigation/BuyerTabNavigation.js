@@ -7,6 +7,7 @@ import Profile from "../screens/Buyer/Profile";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Message from "../screens/Buyer/Message";
+import Notification from "../screens/Buyer/Notification";
 
 const Tab = createBottomTabNavigator();
 

@@ -75,7 +75,7 @@ export default function Search() {
   }, [input]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}></SafeAreaView>
+    <SafeAreaView ></SafeAreaView>
   );
 }
 

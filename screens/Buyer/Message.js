@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState}from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  TextInput,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
@@ -43,12 +44,49 @@ const lessons = [
   },
 ];
 
-export default function Message() {
+export default function Message({navigation}) {
+   const [input, setInput] = useState('');
   return (
-    <SafeAreaView style={{ backgroundColor: '#fff' }}>
+    <SafeAreaView>
+            <View style={styles.header}>
+              <Image source={require("../../assets/LOGO.png")} style={styles.image} />
+              <View style={styles.rightContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Profile");
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/Anupa.png")}
+                    style={styles.avatarMD}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Inbox</Text>
-
+        <View style={styles.searchWrapper}>
+                  <View style={styles.search}>
+                  <View style={styles.header}>
+                    <View style={styles.searchIcon}>
+                      <FeatherIcon
+                        color="#848484"
+                        name="search"
+                        size={17} />
+                    </View>
+                    </View>
+                    <TextInput
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      clearButtonMode="while-editing"
+                      onChangeText={val => setInput(val)}
+                      placeholder="Start typing.."
+                      placeholderTextColor="#848484"
+                      returnKeyType="done"
+                      style={styles.searchControl}
+                      value={input} />
+                  </View>
+                </View>
         {lessons.map(({ name, cal, duration, img }, index) => {
           return (
             <TouchableOpacity
@@ -96,13 +134,80 @@ export default function Message() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+
+    paddingHorizontal: 24,
+    justifyContent: "space-around",
   },
   title: {
     fontSize: 32,
     fontWeight: '700',
     color: '#1d1d1d',
     marginBottom: 12,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    backgroundColor: "#fff",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    alignSelf:'center',
+  },
+  rightContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  avatarMD: {
+    width: 50,
+    height: 50,
+    borderRadius: 9999,
+  },
+  /** Search */
+  search: {
+    position: "relative",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  searchWrapper: {
+    paddingTop: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderColor: "#efefef",
+  },
+  searchIcon: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 34,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+  searchControl: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingLeft: 34,
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  searchContent: {
+    paddingLeft: 24,
+  },
+  searchEmpty: {
+    textAlign: "center",
+    paddingTop: 16,
+    fontWeight: "500",
+    fontSize: 15,
+    color: "#9ca1ac",
   },
   /** Card */
   card: {

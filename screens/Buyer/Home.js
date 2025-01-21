@@ -71,7 +71,11 @@ const Home = ({navigation}) => {
       <View style={styles.header}>
         <Image source={require("../../assets/LOGO.png")} style={styles.image} />
         <View style={styles.rightContainer}>
-          <TouchableOpacity style={{paddingHorizontal:10, alignSelf:'center'}}>
+          <TouchableOpacity style={{paddingHorizontal:10, alignSelf:'center'}}
+                      onPress={() => {
+                        navigation.navigate("Notification");
+                      }}
+          >
             <FeatherIcon color="#6a99e3" name="bell" size={28} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -100,6 +104,7 @@ const Home = ({navigation}) => {
             showsHorizontalScrollIndicator={false}
             onScroll={handleScroll}
             style={styles.carousel}
+            nestedScrollEnabled={true}
           />
           <View style={styles.pagination}>
             {data.map((_, index) => (
@@ -206,7 +211,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 15,
-    backgroundColor: "#fff",
   },
   rightContainer: {
     flexDirection: "row",
