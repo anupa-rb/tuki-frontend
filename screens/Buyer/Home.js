@@ -8,21 +8,23 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  TouchableWithoutFeedback,
 } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const items_2 = [
+const categories_items = [
   {
     icon: "code",
-    label: "TypeScript",
+    label: "Duna",
     company: "8 endorsements",
     jobType: "2 experiences",
     years: "GitHub & Figma",
   },
   {
     icon: "git-merge",
-    label: "Git",
+    label: "Tapari",
     company: "3 endorsements",
     jobType: "1 experience",
     years: "GitHub",
@@ -46,11 +48,13 @@ const data = [
   },
 ];
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleScroll = (event) => {
-    const index = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get("window").width);
+    const index = Math.round(
+      event.nativeEvent.contentOffset.x / Dimensions.get("window").width
+    );
     setCurrentIndex(index);
   };
 
@@ -59,7 +63,6 @@ const Home = () => {
       <Text style={styles.cTitle}>{item.title}</Text>
       <Text style={styles.cSubtitle}>{item.subtitle}</Text>
       <Text style={styles.cDescription}>{item.description}</Text>
-      <Image source={{ uri: item.image }} style={styles.image} />
     </View>
   );
 
@@ -68,42 +71,121 @@ const Home = () => {
       <View style={styles.header}>
         <Image source={require("../../assets/LOGO.png")} style={styles.image} />
         <View style={styles.rightContainer}>
-          <TouchableOpacity>
-            <FeatherIcon color="#6a99e3" name="bell" size={22} />
+          <TouchableOpacity style={{paddingHorizontal:10, alignSelf:'center'}}>
+            <FeatherIcon color="#6a99e3" name="bell" size={28} />
           </TouchableOpacity>
-          <Image source={require("../../assets/Anupa.png")} style={styles.avatarMD} />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Profile");
+            }}
+          >
+            <Image
+              source={require("../../assets/Anupa.png")}
+              style={styles.avatarMD}
+            />
+          </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        style={styles.carousel}
-      />
-      <View style={styles.pagination}>
-        {data.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              { backgroundColor: index === currentIndex ? "#0000ff" : "#cccccc" },
-            ]}
+      <ScrollView
+        showsVerticalScrollIndicator={true}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            style={styles.carousel}
           />
-        ))}
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listContent}>
-        {items_2.map(({ label, company, jobType, years }, index) => (
-          <View key={index} style={styles.card}>
-            <Text style={styles.cardTitle}>{label}</Text>
-            <Text style={styles.cardSubtitle}>{company}</Text>
-            <Text>{jobType}</Text>
-            <Text>{years}</Text>
+          <View style={styles.pagination}>
+            {data.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.dot,
+                  {
+                    backgroundColor:
+                      index === currentIndex ? "#0000ff" : "#cccccc",
+                  },
+                ]}
+              />
+            ))}
           </View>
-        ))}
+        </View>
+
+        <View style={styles.listHeader}>
+          <Text style={styles.Title}>Categories</Text>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+          >
+            <Text style={styles.listAction}>View All</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            flexDirection: "row",
+            paddingHorizontal: 18,
+            justifyContent: "space-around",
+            alignItems: "center",
+            paddingVertical: 10,
+          }}
+        >
+          <Image
+            source={require("../../assets/Anupa.png")}
+            style={styles.avatarXL}
+          />
+          <Image
+            source={require("../../assets/Anupa.png")}
+            style={styles.avatarXL}
+          />
+          <Image
+            source={require("../../assets/Anupa.png")}
+            style={styles.avatarXL}
+          />
+          <Image
+            source={require("../../assets/Anupa.png")}
+            style={styles.avatarXL}
+          />
+          <Image
+            source={require("../../assets/Anupa.png")}
+            style={styles.avatarXL}
+          />
+        </ScrollView>
+
+        <View style={styles.listHeader}>
+          <Text style={styles.Title}>New Items</Text>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+          >
+            <Text style={styles.listAction}>View All</Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+        >
+          {categories_items.map(({ label }, index) => (
+            <View key={index} style={styles.card}>
+              <Image
+                source={require("../../assets/Anupa.png")}
+                style={styles.cardImage}
+              />
+              <Text style={styles.cardTitle}>{label}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -112,26 +194,41 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    backgroundColor: "#ffffff",
+    paddingHorizontal: 15,
+    backgroundColor: "#fff",
   },
   rightContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
   },
   avatarMD: {
-    width: 48,
-    height: 48,
+    width: 50,
+    height: 50,
     borderRadius: 9999,
+  },
+  avatarXL: {
+    width: 64,
+    height: 64,
+    borderRadius: 9999,
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
   },
   image: {
     width: 100,
     height: 100,
     resizeMode: "contain",
+    alignSelf:'center',
   },
   carousel: {
     marginTop: 20,
@@ -175,10 +272,17 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 200,
-    padding: 16,
+    height: 220,
+    padding: 10,
     borderRadius: 12,
     backgroundColor: "#fff",
     marginHorizontal: 6,
+    alignItems: "center",
+  },
+  cardImage: {
+    width: 180,
+    height: 150,
+    borderRadius: 12,
   },
   cardTitle: {
     fontSize: 15,
@@ -188,5 +292,51 @@ const styles = StyleSheet.create({
   cardSubtitle: {
     fontSize: 14,
     color: "#778599",
+  },
+  Title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#000",
+    paddingVertical: 10,
+  },
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  customContainer: {
+    backgroundColor: "#f0f0f0",
+    marginTop: 20,
+  },
+  customImageStyle: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+  },
+  elmStyle: {
+    color: "#333",
+  },
+  brand: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  price: {
+    fontSize: 16,
+    marginTop: 5,
+  },
+  desc: {
+    fontSize: 14,
+    marginTop: 5,
+  },
+  listAction: {
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 20,
+    color: "#778599",
+  },
+  listHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 24,
   },
 });

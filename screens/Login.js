@@ -19,8 +19,8 @@ export default function Login({ navigation }) {
 
   // Simulated user data
   const storedUser = {
-    email: "test@example.com",
-    password: "123456",
+    email: "a",
+    password: "a",
   };
 
   const loginHandler = async () => {

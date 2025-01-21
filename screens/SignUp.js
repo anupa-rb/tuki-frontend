@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
 export default function SignUp({ navigation }) {
   const [form, setForm] = useState({
@@ -17,12 +18,41 @@ export default function SignUp({ navigation }) {
     password: "",
     confirmPassword: "",
   });
+
+  const handleSignUp = async () => {
+    // Check if any field is blank
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+      alert("Please fill in all the fields.");
+      return;
+    }
+
+    // Check if passwords match
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    try {
+      // Save form data to AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(form));
+      navigation.navigate("Buyer Navigation"); // Redirect to Login after successful sign-up
+    } catch (error) {
+      console.error("Error saving data to AsyncStorage", error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerBack}>
-            <FeatherIcon color="#1D2A32" name="chevron-left" size={30} />
+            <FeatherIcon
+              color="#1D2A32"
+              name="chevron-left"
+              size={30}
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            />
           </View>
 
           <Text style={styles.title}>Let's Get Started!</Text>
@@ -35,7 +65,6 @@ export default function SignUp({ navigation }) {
         <View style={styles.form}>
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Full Name</Text>
-
             <TextInput
               clearButtonMode="while-editing"
               onChangeText={(name) => setForm({ ...form, name })}
@@ -48,7 +77,6 @@ export default function SignUp({ navigation }) {
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Email Address</Text>
-
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -64,7 +92,6 @@ export default function SignUp({ navigation }) {
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>
-
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -79,7 +106,6 @@ export default function SignUp({ navigation }) {
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Confirm Password</Text>
-
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -95,11 +121,7 @@ export default function SignUp({ navigation }) {
           </View>
 
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ChooseRole");
-              }}
-            >
+            <TouchableOpacity onPress={handleSignUp}>
               <View style={styles.btn}>
                 <Text style={styles.btnText}>Get Started</Text>
               </View>
@@ -145,7 +167,6 @@ const styles = StyleSheet.create({
     color: "#929292",
     textAlign: "center",
   },
-  /** Form */
   form: {
     marginBottom: 24,
   },
@@ -157,9 +178,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
     textAlign: "center",
-    marginBottom: 110,
   },
-  /** Input */
   input: {
     marginBottom: 16,
   },
@@ -178,7 +197,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
   },
-  /** Button */
   btn: {
     flexDirection: "row",
     alignItems: "center",
@@ -196,16 +214,15 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#fff",
   },
-  //Image
   image: {
-    width: 300, // Set the desired width
-    height: 100, // Set the desired height
+    width: 300,
+    height: 100,
     resizeMode: "contain",
   },
   imageContainer: {
     marginTop: 50,
-    justifyContent: "center", // Vertically centers the content
-    alignItems: "center", // Horizontally centers the content
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#fff",
   },
 });

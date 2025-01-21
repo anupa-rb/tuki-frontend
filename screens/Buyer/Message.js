@@ -74,6 +74,8 @@ export default function Message() {
                         {duration} mins
                       </Text>
                     </View>
+
+
                   </View>
                 </View>
 
