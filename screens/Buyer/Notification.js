@@ -2,12 +2,12 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const Notification = () => {
+const BNotification = () => {
   return (
     <SafeAreaView>
-      <Text>Your Notifications</Text>
+      <Text>Buyer Notifications</Text>
     </SafeAreaView>
   )
 }
 
-export default Notification;
+export default BNotification;

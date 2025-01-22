@@ -3,11 +3,11 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Buyer/Home";
 import Search from "../screens/Buyer/Search";
-import Profile from "../screens/Buyer/MyProfile";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Message from "../screens/Buyer/Message";
 import Orders from "../screens/Buyer/Orders";
+import BuyerProfile from "../screens/Buyer/MyProfile";
 
 const Tab = createBottomTabNavigator();
 
@@ -71,8 +71,8 @@ const BuyerTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="BuyerProfile"
+        component={BuyerProfile}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

@@ -8,6 +8,7 @@ import {
   TextInput,
   Text,
   Image,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,8 +45,9 @@ const items = [
 ];
 const CARD_WIDTH = Math.min(Dimensions.get("screen").width * 0.75, 400);
 
-export default function MyProfile() {
+export default function BuyerProfile() {
   const [name, setName] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -62,6 +64,8 @@ export default function MyProfile() {
 
     fetchUserName();
   }, []);
+
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   return (
     <SafeAreaView>
@@ -98,37 +102,6 @@ export default function MyProfile() {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.profileDescription}>
-          Skilled in user research, wireframing, prototyping, and collaborating
-          with cross-functional teams.
-        </Text>
-
-        <View style={styles.profileTags}>
-          {tags.map((tag, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                // handle onPress
-              }}
-            >
-              <Text style={styles.profileTagsItem}>#{tag}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View style={styles.stats}>
-          {stats.map(({ label, value }, index) => (
-            <View
-              key={index}
-              style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
-            >
-              <Text style={styles.statsItemText}>{label}</Text>
-
-              <Text style={styles.statsItemValue}>{value}</Text>
-            </View>
-          ))}
-        </View>
-
         <View style={styles.contentActions}>
           <TouchableOpacity
             onPress={() => {
@@ -151,6 +124,18 @@ export default function MyProfile() {
               <Text style={styles.btnPrimaryText}>Log Out</Text>
             </View>
           </TouchableOpacity>
+        </View>
+        <View style={styles.stats}>
+          <Text style={{ fontWeight: "500" }}>Become Seller</Text>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isEnabled ? "#0078FF" : "#f4f3f4"}
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+              style={{ marginTop:-12}}
+            />
+            </View>
         </View>
 
         <View style={styles.list}>
@@ -273,7 +258,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DC5440",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    borderBottomLeftRadius: 25, 
+    borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
   },
   headerAction: {
@@ -343,7 +328,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: "#fff",
     marginBottom: 6,
-    marginTop:15,
+    marginTop: 15,
   },
   profileSubtitle: {
     fontSize: 15,
@@ -371,7 +356,7 @@ const styles = StyleSheet.create({
   },
   /** Avatar */
   avatar: {
-    marginTop:10,
+    marginTop: 10,
     position: "relative",
   },
   avatarImg: {
@@ -393,6 +378,7 @@ const styles = StyleSheet.create({
   /** Stats */
   stats: {
     backgroundColor: "#fff",
+    marginTop: 15,
     flexDirection: "row",
     padding: 20,
     borderRadius: 12,
@@ -404,29 +390,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 20,
     elevation: 1,
-  },
-  statsItem: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    borderLeftWidth: 1,
-    borderColor: "rgba(189, 189, 189, 0.32)",
-  },
-  statsItemText: {
-    fontSize: 14,
-    fontWeight: "400",
-    lineHeight: 18,
-    color: "#778599",
-    marginBottom: 5,
-  },
-  statsItemValue: {
-    fontSize: 16,
-    fontWeight: "600",
-    lineHeight: 20,
-    color: "#121a26",
   },
   /** Button */
   btn: {

@@ -81,7 +81,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Profile");
+              navigation.navigate("BuyerProfile");
             }}
           >
             <Image

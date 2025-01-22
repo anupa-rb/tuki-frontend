@@ -29,7 +29,7 @@ const Orders = ({navigation}) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Profile");
+                navigation.navigate("BuyerProfile");
               }}
             >
               <Image

@@ -12,9 +12,13 @@ import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import ChooseRole from "./screens/ChooseRole";
 import SecondScreen from "./screens/SecondScreen";
-import Notification from "./screens/Buyer/Notification";
+import BNotification from "./screens/Buyer/Notification";
+import SNotification from "./screens/Seller/Notification";
 import Chat from "./screens/Buyer/Chat";
 import Message from "./screens/Buyer/Message";
+import AddProduct from "./screens/Seller/AddProduct";
+import MyProfile from "./screens/Seller/MyProfile";
+import ProductAdded from "./screens/Seller/ProductAdded";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,8 +62,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
           <Stack.Screen
-          name="Notification"
-          component={Notification}
+          name="BNotification"
+          component={BNotification}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="SNotification"
+          component={SNotification}
           options={{ headerShown: false }}
         />
           <Stack.Screen
@@ -70,6 +79,21 @@ export default function App() {
           <Stack.Screen
           name="Chat"
           component={Chat}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="AddProduct"
+          component={AddProduct}
+          options={{ headerShown: false }}
+        />
+                  <Stack.Screen
+          name="MyProfile"
+          component={MyProfile}
+          options={{ headerShown: false }}
+        />
+      <Stack.Screen
+          name="ProductAdded"
+          component={ProductAdded}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
