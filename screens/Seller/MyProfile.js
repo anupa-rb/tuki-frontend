@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const items = [
   {
@@ -55,6 +56,7 @@ const reviews = [
 export default function MyProfile({ navigation }) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -68,11 +70,43 @@ export default function MyProfile({ navigation }) {
         console.error("Failed to fetch user name:", error);
       }
     };
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://your-backend-url.com/products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
 
     fetchUserName();
+    fetchProducts();
   }, []);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const handleAddProduct = () => {
+    navigation.navigate("AddProduct", {
+      onGoBack: async () => {
+        // Refresh the products list after adding a product
+        const response = await fetch("https://your-backend-url.com/products");
+        const data = await response.json();
+        setProducts(data);
+      },
+    });
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      await fetch(`https://your-backend-url.com/products/${productId}`, {
+        method: "DELETE",
+      });
+      setProducts((prev) => prev.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -157,9 +191,7 @@ export default function MyProfile({ navigation }) {
             <Text style={styles.listTitle}>My Products</Text>
 
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("AddProduct");
-              }}
+              onPress={handleAddProduct}
             >
               <Text style={styles.listAction}>Add</Text>
             </TouchableOpacity>
@@ -187,9 +219,9 @@ export default function MyProfile({ navigation }) {
                   <View style={styles.cardFooter}>
                     <View style={styles.cardBody}>
                       <Text style={styles.cardTitle}>{label}</Text>
-
                       <Text style={styles.cardSubtitle}>{company}</Text>
                     </View>
+                    <AntDesign name="delete" size={24} color="red" onPress={() => handleDeleteProduct(id)}/>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -523,6 +555,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginRight:10,
   },
   cardFooterText: {
     fontSize: 12,
@@ -564,5 +597,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  
 });
