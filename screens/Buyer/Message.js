@@ -102,8 +102,9 @@ export default function Message({navigation}) {
             <TouchableOpacity
               key={index}
               onPress={() => {
-                // handle onPress
-              }}>
+                navigation.navigate("Chat", { name });
+              }}
+              >
               <View style={styles.card}>
                 <Image
                   alt=""

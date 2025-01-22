@@ -13,6 +13,8 @@ import SignUp from "./screens/SignUp";
 import ChooseRole from "./screens/ChooseRole";
 import SecondScreen from "./screens/SecondScreen";
 import Notification from "./screens/Buyer/Notification";
+import Chat from "./screens/Buyer/Chat";
+import Message from "./screens/Buyer/Message";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +60,16 @@ export default function App() {
           <Stack.Screen
           name="Notification"
           component={Notification}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="Message"
+          component={Message}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="Chat"
+          component={Chat}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

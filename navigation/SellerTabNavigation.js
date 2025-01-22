@@ -3,7 +3,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Seller/Home';
 import Search from '../screens/Seller/Search';
-import Profile from '../screens/Seller/Profile';
+import Profile from '../screens/Seller/MyProfile';
 import { Ionicons } from "@expo/vector-icons"
 
 
