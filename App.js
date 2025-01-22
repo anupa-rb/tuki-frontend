@@ -19,6 +19,7 @@ import Message from "./screens/Buyer/Message";
 import AddProduct from "./screens/Seller/AddProduct";
 import MyProfile from "./screens/Seller/MyProfile";
 import ProductAdded from "./screens/Seller/ProductAdded";
+import SellerChat from "./screens/Seller/Chat";
 
 const Stack = createNativeStackNavigator();
 
@@ -79,6 +80,11 @@ export default function App() {
           <Stack.Screen
           name="Chat"
           component={Chat}
+          options={{ headerShown: false }}
+        />
+                  <Stack.Screen
+          name="SellerChat"
+          component={SellerChat}
           options={{ headerShown: false }}
         />
           <Stack.Screen

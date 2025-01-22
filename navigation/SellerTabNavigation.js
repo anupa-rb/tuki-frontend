@@ -5,6 +5,9 @@ import Home from '../screens/Seller/Home';
 import Search from '../screens/Seller/Search';
 import MyProfile from '../screens/Seller/MyProfile';
 import { Ionicons } from "@expo/vector-icons"
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Orders from '../screens/Seller/Orders';
+import Message from '../screens/Seller/Message';
 
 
 const Tab = createBottomTabNavigator();
@@ -30,6 +33,17 @@ const SellerTabNavigation = () => {
             }
         }}
         />
+              <Tab.Screen
+        name="Orders"
+        component={Orders}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons name="newspaper-outline" size={24} color="black" />
+            );
+          },
+        }}
+      />
         <Tab.Screen 
         name="Search" 
         component={Search}
@@ -42,6 +56,15 @@ const SellerTabNavigation = () => {
             }
         }}
         />
+              <Tab.Screen
+        name="Message"
+        component={Message}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return <AntDesign name="message1" size={24} color="black" />;
+          },
+        }}
+      />
         <Tab.Screen 
         name="MyProfile" 
         component={MyProfile}

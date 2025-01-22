@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const Chat = ({ route, navigation}) => {
+const SellerChat = ({ route, navigation}) => {
   const { name = "User" } = route.params || {}; // Provide a fallback value for `name`
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Chat;
+export default SellerChat;
