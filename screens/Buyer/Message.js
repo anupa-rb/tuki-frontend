@@ -48,33 +48,43 @@ export default function Message({navigation}) {
    const [input, setInput] = useState('');
   return (
     <SafeAreaView>
-            <View style={styles.header}>
-              <Image source={require("../../assets/LOGO.png")} style={styles.image} />
-              <View style={styles.rightContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Profile");
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/Anupa.png")}
-                    style={styles.avatarMD}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+        <View style={styles.header}>
+          <Image
+            source={require("../../assets/LOGO.png")}
+            style={styles.logo}
+          />
+          <View style={styles.rightContainer}>
+            <TouchableOpacity
+              style={{ paddingHorizontal: 10, alignSelf: "center" }}
+              onPress={() => {
+                navigation.navigate("Notification");
+              }}
+            >
+              <FeatherIcon color="#6a99e3" name="bell" size={28} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Profile");
+              }}
+            >
+              <Image
+                source={require("../../assets/Anupa.png")}
+                style={styles.avatarMD}
+              />
+            </TouchableOpacity>
+          </View>
+          </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Inbox</Text>
         <View style={styles.searchWrapper}>
                   <View style={styles.search}>
-                  <View style={styles.header}>
                     <View style={styles.searchIcon}>
                       <FeatherIcon
                         color="#848484"
                         name="search"
                         size={17} />
                     </View>
-                    </View>
+              
                     <TextInput
                       autoCapitalize="none"
                       autoCorrect={false}
@@ -134,7 +144,6 @@ export default function Message({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-
     paddingHorizontal: 24,
     justifyContent: "space-around",
   },
@@ -144,18 +153,13 @@ const styles = StyleSheet.create({
     color: '#1d1d1d',
     marginBottom: 12,
   },
+  /** Header */
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 15,
-    backgroundColor: "#fff",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    alignSelf:'center',
+    marginTop:37.5,
   },
   rightContainer: {
     flexDirection: "row",
@@ -165,6 +169,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 9999,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    alignSelf: "center",
   },
   /** Search */
   search: {
@@ -182,10 +192,10 @@ const styles = StyleSheet.create({
     borderColor: "#efefef",
   },
   searchIcon: {
-    position: "absolute",
+    position: "flex",
     top: 0,
     bottom: 0,
-    left: 0,
+    left: 25,
     width: 34,
     alignItems: "center",
     justifyContent: "center",

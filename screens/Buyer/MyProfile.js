@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Dimensions,
-  SafeAreaView,
   ScrollView,
   View,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
   Text,
   Image,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
@@ -44,7 +44,7 @@ const items = [
 ];
 const CARD_WIDTH = Math.min(Dimensions.get("screen").width * 0.75, 400);
 
-export default function Profile() {
+export default function MyProfile() {
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -60,127 +60,97 @@ export default function Profile() {
       }
     };
 
-    fetchUserName(); 
+    fetchUserName();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView>
       <View style={styles.header}>
-        <View style={styles.headerAction}>
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <TouchableOpacity
+            style={{ paddingHorizontal: 10 }}
             onPress={() => {
-              // handle onPress
+              navigation.navigate("Notification");
             }}
           >
-            <FeatherIcon name="chevron-left" size={24} />
+            <FeatherIcon color="#fff" name="bell" size={28} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.search}>
-          <View style={styles.searchIcon}>
-            <FeatherIcon color="#778599" name="search" size={17} />
+        <View style={styles.profileTop}>
+          <View style={styles.avatar}>
+            <Image
+              source={require("../../assets/Anupa.png")}
+              style={styles.avatarImg}
+            />
+            <View style={styles.avatarNotification} />
           </View>
 
-          <TextInput
-            autoCapitalize="words"
-            autoComplete="name"
-            placeholder="Search..."
-            placeholderTextColor="#778599"
-            style={styles.searchControl}
-          />
-        </View>
+          <View style={styles.profileBody}>
+            {/* Dynamically set the profile title */}
+            <Text style={styles.profileTitle}>{name}</Text>
 
-        <View style={[styles.headerAction, { alignItems: "flex-end" }]}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <FeatherIcon name="more-vertical" size={24} />
-          </TouchableOpacity>
+            <Text style={styles.profileSubtitle}>
+              UI/UX Designer{" · "}
+              <Text style={{ color: "#fff" }}>@nickmiller</Text>
+            </Text>
+          </View>
         </View>
       </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.profileDescription}>
+          Skilled in user research, wireframing, prototyping, and collaborating
+          with cross-functional teams.
+        </Text>
 
-      <ScrollView>
-        <View style={styles.content}>
-          <View style={styles.profile}>
-            <View style={styles.profileTop}>
-              <View style={styles.avatar}>
-                <Image
-                  source={require("../../assets/Anupa.png")}
-                  style={styles.avatarImg}
-                />
-                <View style={styles.avatarNotification} />
-              </View>
-
-              <View style={styles.profileBody}>
-                {/* Dynamically set the profile title */}
-                <Text style={styles.profileTitle}>{name}</Text>
-                <Text style={styles.profileSubtitle}>
-                  UI/UX Designer{" · "}
-                  <Text style={{ color: "#266EF1" }}>@nickmiller</Text>
-                </Text>
-              </View>
-            </View>
-
-            <Text style={styles.profileDescription}>
-              Skilled in user research, wireframing, prototyping, and
-              collaborating with cross-functional teams.
-            </Text>
-
-            <View style={styles.profileTags}>
-              {tags.map((tag, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                >
-                  <Text style={styles.profileTagsItem}>#{tag}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.stats}>
-            {stats.map(({ label, value }, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.statsItem,
-                  index === 0 && { borderLeftWidth: 0 },
-                ]}
-              >
-                <Text style={styles.statsItemText}>{label}</Text>
-
-                <Text style={styles.statsItemValue}>{value}</Text>
-              </View>
-            ))}
-          </View>
-
-          <View style={styles.contentActions}>
+        <View style={styles.profileTags}>
+          {tags.map((tag, index) => (
             <TouchableOpacity
+              key={index}
               onPress={() => {
                 // handle onPress
               }}
-              style={{ flex: 1, paddingHorizontal: 6 }}
             >
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Edit Profile</Text>
-              </View>
+              <Text style={styles.profileTagsItem}>#{tag}</Text>
             </TouchableOpacity>
+          ))}
+        </View>
 
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-              style={{ flex: 1, paddingHorizontal: 6 }}
+        <View style={styles.stats}>
+          {stats.map(({ label, value }, index) => (
+            <View
+              key={index}
+              style={[styles.statsItem, index === 0 && { borderLeftWidth: 0 }]}
             >
-              <View style={styles.btnPrimary}>
-                <Text style={styles.btnPrimaryText}>Log Out</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+              <Text style={styles.statsItemText}>{label}</Text>
+
+              <Text style={styles.statsItemValue}>{value}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.contentActions}>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={{ flex: 1, paddingHorizontal: 6 }}
+          >
+            <View style={styles.btn}>
+              <Text style={styles.btnText}>Edit Profile</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}
+            style={{ flex: 1, paddingHorizontal: 6 }}
+          >
+            <View style={styles.btnPrimary}>
+              <Text style={styles.btnPrimaryText}>Log Out</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.list}>
@@ -286,15 +256,25 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    justifyContent: "space-around",
+  },
+  rightContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
   /** Header */
   header: {
-    flexDirection: "row",
-    alignItems: "center",
     justifyContent: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderColor: "#e3e3e3",
+    backgroundColor: "#DC5440",
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderBottomLeftRadius: 25, 
+    borderBottomRightRadius: 25,
   },
   headerAction: {
     width: 40,
@@ -345,10 +325,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   /** Profile */
-  profile: {
-    paddingTop: 4,
-    paddingBottom: 16,
-  },
   profileTop: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -365,13 +341,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     lineHeight: 32,
-    color: "#121a26",
+    color: "#fff",
     marginBottom: 6,
+    marginTop:15,
   },
   profileSubtitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#778599",
+    color: "#fff",
   },
   profileDescription: {
     fontSize: 14,
@@ -394,6 +371,7 @@ const styles = StyleSheet.create({
   },
   /** Avatar */
   avatar: {
+    marginTop:10,
     position: "relative",
   },
   avatarImg: {
@@ -460,13 +438,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 2,
     backgroundColor: "transparent",
-    borderColor: "#266EF1",
+    borderColor: "#DC5440",
   },
   btnText: {
     fontSize: 14,
     lineHeight: 20,
     fontWeight: "700",
-    color: "#266EF1",
+    color: "##DC5440",
   },
   btnPrimary: {
     flexDirection: "row",
@@ -476,8 +454,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 2,
-    backgroundColor: "#266EF1",
-    borderColor: "#266EF1",
+    backgroundColor: "#DC5440",
+    borderColor: "#DC5440",
   },
   btnPrimaryText: {
     fontSize: 14,
@@ -493,7 +471,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 24,
   },
   listTitle: {
     fontSize: 18,
@@ -509,7 +486,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingVertical: 12,
-    paddingHorizontal: 18,
   },
   card: {
     width: CARD_WIDTH,

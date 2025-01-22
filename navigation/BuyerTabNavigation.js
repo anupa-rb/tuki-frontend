@@ -3,11 +3,11 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Buyer/Home";
 import Search from "../screens/Buyer/Search";
-import Profile from "../screens/Buyer/Profile";
+import Profile from "../screens/Buyer/MyProfile";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Message from "../screens/Buyer/Message";
-import Notification from "../screens/Buyer/Notification";
+import Orders from "../screens/Buyer/Orders";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +39,17 @@ const BuyerTabNavigation = () => {
                 size={24}
                 //color={focused ? black : gray}
               />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Orders"
+        component={Orders}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons name="newspaper-outline" size={24} color="black" />
             );
           },
         }}
