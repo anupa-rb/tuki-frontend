@@ -18,6 +18,8 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+
 const items = [
   {
     label: "Duna",
@@ -58,7 +60,10 @@ const reviews = [
 export default function MyProfile({ navigation }) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState({
+    title: "",
+    price: "",
+  });
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -80,7 +85,7 @@ export default function MyProfile({ navigation }) {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://your-backend-url.com/products");
+        const response = await fetch(`${API_URL}/products`);
         const data = await response.json();
         setProducts(data); // Populate the products list
       } catch (error) {
@@ -115,7 +120,7 @@ export default function MyProfile({ navigation }) {
     navigation.navigate("AddProduct", {
       onGoBack: async () => {
         // Refresh the products list after adding a product
-        const response = await fetch("https://your-backend-url.com/products");
+        const response = await fetch(`${API_URL}/products`);
         const data = await response.json();
         setProducts(data);
       },
@@ -124,41 +129,32 @@ export default function MyProfile({ navigation }) {
 
   const handleDeleteProduct = async (productId) => {
     try {
-      await fetch(`https://your-backend-url.com/products/${productId}`, {
+      const token = await AsyncStorage.getItem("authToken"); // Assuming you store the token in AsyncStorage
+      const response = await fetch(`${API_URL}/gigs/${productId}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
       });
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to delete the product.");
+      }
+
+      // Update the product list after successful deletion
+      setProducts((prev) =>
+        prev.filter((product) => product._id !== productId)
+      );
+
+      alert("Product deleted successfully.");
     } catch (error) {
       console.error("Failed to delete product:", error);
+      alert(`Error: ${error.message}`);
     }
   };
-
-  // const handleDeleteProduct = async (productId) => {
-  //   try {
-  //     const token = await AsyncStorage.getItem("authToken"); // Assuming you store the token in AsyncStorage
-  //     const response = await fetch(`https://your-backend-url.com/gigs/${productId}`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`, // Add token for authentication
-  //       },
-  //     });
-
-  //     const result = await response.json();
-
-  //     if (!response.ok) {
-  //       throw new Error(result.message || "Failed to delete the product.");
-  //     }
-
-  //     // Update the product list after successful deletion
-  //     setProducts((prev) => prev.filter((product) => product._id !== productId));
-
-  //     alert("Product deleted successfully.");
-  //   } catch (error) {
-  //     console.error("Failed to delete product:", error);
-  //     alert(`Error: ${error.message}`);
-  //   }
-  // };
 
   return (
     <SafeAreaView>
@@ -238,7 +234,7 @@ export default function MyProfile({ navigation }) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            {items.map(({ label, company }, index) => (
+            {items.map(({ products }, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => {
@@ -254,8 +250,8 @@ export default function MyProfile({ navigation }) {
                   </View>
                   <View style={styles.cardFooter}>
                     <View style={styles.cardBody}>
-                      <Text style={styles.cardTitle}>{label}</Text>
-                      <Text style={styles.cardSubtitle}>{company}</Text>
+                      <Text style={styles.cardTitle}>{products.title}</Text>
+                      <Text style={styles.cardSubtitle}>{products.price}</Text>
                     </View>
                     <AntDesign
                       name="delete"
