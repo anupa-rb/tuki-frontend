@@ -103,7 +103,7 @@ const handleLogOut = async () =>{
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "Login" }], // Replace "Login" with your login screen name
+        routes: [{ name: "Login" }],
       })
     );
   } catch (error) {

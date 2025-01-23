@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import {
   StyleSheet,
   View,
@@ -6,18 +7,23 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Button,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
 export default function AddProduct({ navigation }) {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    title: "",
+    price: "",
+    category: "",
+    description: "",
+    deliveryTime: "",
   });
 
   const [file, setFile] = useState(null);
@@ -25,9 +31,55 @@ export default function AddProduct({ navigation }) {
   // Stores any error message
   const [error, setError] = useState(null);
 
-  //Product Submission
-  const handleSubmit = () => {
-    navigation.navigate("ProductAdded");
+  const handleSubmit = async () => {
+    try {
+      // Retrieve the token from AsyncStorage
+      const token = await AsyncStorage.getItem("accessToken");
+      console.log("Retrieved Token:", token);
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      if (!file) {
+        console.error("Cover image is required");
+        return;
+      }
+
+      const formData = new FormData();
+
+      // Add other form fields
+      formData.append("title", form.title);
+      formData.append("price", form.price);
+      formData.append("category", form.category);
+      formData.append("description", form.description);
+      formData.append("deliveryTime", form.deliveryTime);
+
+      // Add the file as coverimage
+      formData.append("coverImage", {
+        uri: file.uri,
+        type: file.type,
+        name: file.name,
+      });
+
+      // Make the API call
+      const response = await fetch(`${API_URL}/gig/create`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        navigation.navigate("ProductAdded");
+      } else {
+        console.error("Failed to submit form:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   // Function to pick an image from
@@ -46,16 +98,26 @@ export default function AddProduct({ navigation }) {
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
+        mediaType: "photo",
         allowsEditing: true,
         quality: 1,
       });
 
-      if (!result.canceled) {
-        setFile(result.assets[0].uri); // Use the correct property for the image URI
-        setError(null); // Clear previous errors
-      } else {
-        setError("No image selected");
+      //   if (!result.canceled) {
+      //     const selectedFile = result.assets[0]; // Use the correct property for the image object
+      //     setFile({
+      //       uri: selectedFile.uri,
+      //       type: selectedFile.type || "image/jpeg", // Use MIME type if available
+      //       name: selectedFile.uri.split("/").pop(), // Extract file name from URI
+      //     });
+      //     setError(null); // Clear previous errors
+      //   } else {
+      //     setError("No image selected");
+      //   }
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setFile(result.assets[0]);
       }
+
       console.log(result);
     } catch (err) {
       setError("An error occurred while selecting the image.");
@@ -86,11 +148,11 @@ export default function AddProduct({ navigation }) {
 
             <TextInput
               clearButtonMode="while-editing"
-              onChangeText={(name) => setForm({ ...form, name })}
+              onChangeText={(title) => setForm({ ...form, title })}
               placeholder="John Doe"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.name}
+              value={form.title}
             />
           </View>
 
@@ -102,11 +164,11 @@ export default function AddProduct({ navigation }) {
               autoCorrect={false}
               clearButtonMode="while-editing"
               keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
+              onChangeText={(price) => setForm({ ...form, price })}
               placeholder="john@example.com"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.email}
+              value={form.price}
             />
           </View>
 
@@ -116,12 +178,12 @@ export default function AddProduct({ navigation }) {
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={(password) => setForm({ ...form, password })}
+              onChangeText={(category) => setForm({ ...form, category })}
               placeholder="Category"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
-              value={form.password}
+              value={form.category}
             />
           </View>
 
@@ -131,28 +193,51 @@ export default function AddProduct({ navigation }) {
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={(confirmPassword) =>
-                setForm({ ...form, confirmPassword })
-              }
+              onChangeText={(description) => setForm({ ...form, description })}
               placeholder="Description"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
-              value={form.confirmPassword}
+              value={form.description}
             />
           </View>
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Upload Image</Text>
+            <Text style={styles.inputLabel}>Delivery Time</Text>
+
+            <TextInput
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              onChangeText={(deliveryTime) =>
+                setForm({ ...form, deliveryTime })
+              }
+              placeholder="5 days"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+              value={form.deliveryTime}
+            />
           </View>
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <Text style={styles.button}>Choose Image</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.inputLabel}>Upload Image</Text>
+            <Button title="Pick an Image" onPress={pickImage} />
+
+            {file && (
+              <Image
+                source={{ uri: file.uri }}
+                style={{ width: 200, height: 200 }}
+              />
+            )}
+            <Button
+              title="Upload Image"
+              onPress={handleSubmit}
+              disabled={!file}
+            />
+          </View>
 
           {/* Conditionally render the image 
             or error message */}
           {file ? (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: file.uri }} style={styles.image} />{" "}
               <Text>Image Selected</Text>{" "}
             </View>
           ) : (
