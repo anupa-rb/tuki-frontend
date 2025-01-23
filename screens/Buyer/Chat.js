@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,151 +6,143 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+  Image,
   ScrollView,
+  Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FeatherIcon from "react-native-vector-icons/Feather";
+import { useRoute } from "@react-navigation/native"; // For accessing params
+import axios from "axios";
 
-const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+const API_URL = "https://your-backend-url/api";
 
-const Chat = ({ route, navigation }) => {
-  const { name = "User" } = route.params || {}; // Provide a fallback value for `name`
-  const [message, setMessage] = useState("");
+const Message = () => {
+  const route = useRoute();
+  const { conversationID } = route.params; // Get `conversationID` from route params
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleSendMessage = async () => {
-    if (message.trim()) {
-      // Optimistic UI update
-      const newMessage = {
-        id: messages.length + 1,
-        text: message,
-        isSender: true,
-      };
-      setMessages([newMessage, ...messages]);
-      setMessage("");
-
+  // Fetch messages from the backend
+  useEffect(() => {
+    const fetchMessages = async () => {
       try {
-        // Send message to the backend
-        await fetch("https://unique-burro-surely.ngrok-free.app/api/messages", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: message }),
-        });
-      } catch (error) {
-        console.error("Error sending message:", error);
+        const response = await axios.get(
+          `${API_URL}/messages/${conversationID}`
+        );
+        setMessages(response.data);
+      } catch (err) {
+        Alert.alert(
+          "Error",
+          err.response?.data?.message || "Failed to load messages"
+        );
+        setError(err);
+      } finally {
+        setLoading(false);
       }
+    };
+    fetchMessages();
+  }, [conversationID]);
+
+  // Send a new message to the backend
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    try {
+      await axios.post(`${API_URL}/messages`, {
+        conversationID,
+        description: newMessage,
+      });
+      // Refresh messages after sending
+      setNewMessage("");
+      const response = await axios.get(`${API_URL}/messages/${conversationID}`);
+      setMessages(response.data);
+    } catch (err) {
+      Alert.alert(
+        "Error",
+        err.response?.data?.message || "Failed to send message"
+      );
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <SafeAreaView>
-        <View style={styles.headerContainer}>
-          <FeatherIcon
-            color="#1D2A32"
-            name="chevron-left"
-            size={32}
-            onPress={() => {
-              navigation.navigate("Message");
-            }}
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.messagesContainer}>
+        {loading ? (
+          <Text style={styles.loader}>Loading...</Text>
+        ) : error ? (
+          <Text style={styles.error}>Something went wrong</Text>
+        ) : (
+          <FlatList
+            data={messages}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <View
+                style={[
+                  styles.messageItem,
+                  item.userID._id === "userID" && styles.owner,
+                ]}
+              >
+                <Image
+                  source={{
+                    uri:
+                      item.userID.image ||
+                      "https://your-default-avatar-url/noavatar.png",
+                  }}
+                  style={styles.avatar}
+                />
+                <Text style={styles.messageText}>{item.description}</Text>
+              </View>
+            )}
           />
-          <Text style={styles.chatHeader}>{name}</Text>
-        </View>
-      </SafeAreaView>
-
-      <View style={styles.chatContainer}>
-        <ScrollView contentContainerStyle={styles.messageContainer}>
-          {messages.map(({ id, text, isSender }) => (
-            <View
-              key={id}
-              style={[
-                styles.messageBubble,
-                isSender ? styles.senderBubble : styles.receiverBubble,
-              ]}
-            >
-              <Text style={styles.messageText}>{text}</Text>
-            </View>
-          ))}
-        </ScrollView>
-        </View>
+        )}
+      </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          value={message}
-          onChangeText={setMessage}
-          placeholder="Type your message"
+          value={newMessage}
+          onChangeText={setNewMessage}
+          placeholder="Write a message..."
         />
-        <TouchableOpacity onPress={handleSendMessage} style={styles.sendButton}>
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  headerContainer: {
+  container: { flex: 1, backgroundColor: "#f5f5f5" },
+  messagesContainer: { padding: 10 },
+  loader: { textAlign: "center", marginTop: 20 },
+  error: { color: "red", textAlign: "center", marginTop: 20 },
+  messageItem: {
     flexDirection: "row",
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  chatHeader: {
-    fontSize: 20,
-    fontWeight: "bold",
-    paddingHorizontal: 10,
-  },
-  chatContainer: {
-    flex: 1,
+    alignItems: "center",
+    marginVertical: 5,
+    backgroundColor: "#eaeaea",
+    borderRadius: 8,
     padding: 10,
-    justifyContent: "flex-end",
-  },
-  messageContainer: {
-    backgroundColor: "#0078FF",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 5,
     maxWidth: "80%",
   },
-  messageText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  messageContainer: {
-    padding: 16,
-  },
-  messageBubble: {
-    maxWidth: "70%",
-    padding: 12,
-    borderRadius: 16,
-    marginBottom: 10,
-  },
-  senderBubble: {
+  owner: {
     alignSelf: "flex-end",
-    backgroundColor: "#0084ff",
+    backgroundColor: "#0078FF",
   },
-  receiverBubble: {
-    alignSelf: "flex-start",
-    backgroundColor: "#e5e5ea",
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
   },
-  messageText: {
-    color: "#fff",
-  },
+  messageText: { fontSize: 16, color: "#333" },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
+    padding: 10,
   },
   input: {
     flex: 1,
@@ -172,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Chat;
+export default Message;

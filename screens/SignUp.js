@@ -70,7 +70,6 @@ export default function SignUp({ navigation }) {
         await AsyncStorage.setItem("accessToken", data.accessToken);
 
         console.log("Registration successful:", data);
-        // Navigate to Buyer Navigation (or another page after successful sign-up)
         if (isSeller === true) {
           navigation.navigate("Seller Navigation");
         } else {

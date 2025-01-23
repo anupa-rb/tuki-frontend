@@ -19,7 +19,7 @@ import Message from "./screens/Buyer/Message";
 import AddProduct from "./screens/Seller/AddProduct";
 import MyProfile from "./screens/Seller/MyProfile";
 import ProductAdded from "./screens/Seller/ProductAdded";
-import SellerChat from "./screens/Seller/Chat";
+import SellerChat from "./screens/Seller/SellerChat";
 
 const Stack = createNativeStackNavigator();
 

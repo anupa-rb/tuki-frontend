@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const lessons = [
+const people = [
   {
     img: "https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2404&q=80",
     name: "Hari Prasad Guragai",
@@ -92,12 +92,12 @@ export default function Message({ navigation }) {
             />
           </View>
         </View>
-        {lessons.map(({ name, cal, duration, img }, index) => {
+        {people.map(({ name, cal, duration, img }, index) => {
           return (
             <TouchableOpacity
               key={index}
               onPress={() => {
-                navigation.navigate("Chat", { name });
+                navigation.navigate("SellerChat", { name, conversationID: index + 1 });
               }}
             >
               <View style={styles.card}>
