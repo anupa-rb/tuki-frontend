@@ -12,7 +12,7 @@ import {
   Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
@@ -94,22 +94,22 @@ export default function MyProfile({ navigation }) {
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-const handleLogOut = async () =>{
-  try {
-    // Remove the access token from AsyncStorage
-    await AsyncStorage.removeItem("accessToken");
+  const handleLogOut = async () => {
+    try {
+      // Remove the access token from AsyncStorage
+      await AsyncStorage.removeItem("accessToken");
 
-    // Reset the navigation stack to ensure no back navigation
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Login" }],
-      })
-    );
-  } catch (error) {
-    console.error("Failed to log out:", error);
-  }
-}
+      // Reset the navigation stack to ensure no back navigation
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Login" }],
+        })
+      );
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+  };
 
   const handleAddProduct = () => {
     navigation.navigate("AddProduct", {
@@ -226,7 +226,7 @@ const handleLogOut = async () =>{
 
         <View style={styles.list}>
           <View style={styles.listHeader}>
-            <Text style={styles.listTitle}>My Products</Text>
+            <Text style={styles.listTitle}>My Gigs</Text>
 
             <TouchableOpacity onPress={handleAddProduct}>
               <Text style={styles.listAction}>Add</Text>
