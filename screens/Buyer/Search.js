@@ -1,249 +1,164 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
-  SafeAreaView,
   View,
-  ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+  ActivityIndicator,
+  StyleSheet,
+  FlatList,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const users = [
-  {
-    img: '',
-    name: 'Bell Burgess',
-    phone: '+1 (887) 478-2693',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
-    name: 'Bernard Baker',
-    phone: '+1 (862) 581-3022',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
-    name: 'Elma Chapman',
-    phone: '+1 (913) 497-2020',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Knapp Berry',
-    phone: '+1 (951) 472-2967',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
-    name: 'Larson Ashbee',
-    phone: '+1 (972) 566-2684',
-  },
-  {
-    img: '',
-    name: 'Lorraine Abbott',
-    phone: '+1 (959) 422-3635',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80',
-    name: 'Rosie Arterton',
-    phone: '+1 (845) 456-2237',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1573497019236-17f8177b81e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Shelby Ballard',
-    phone: '+1 (824) 467-3579',
-  },
-];
+const Search = ({navigation}) => {
+  const [gigs, setGigs] = useState([]);
+  const [searchGigText, setSearchGigText] = useState("");
+  const [searchErrorText, setSearchErrorText] = useState("");
+  const [errorText, setErrorText] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [firstRun, setFirstRun] = useState(true);
 
-export default function Search() {
-  const [input, setInput] = useState('');
-  const filteredRows = useMemo(() => {
-    const rows = [];
-    const query = input.toLowerCase();
+  useEffect(() => {
+    fetchGigs();
+  }, []);
 
-    for (const item of users) {
-      const nameIndex = item.name.toLowerCase().search(query);
+  useEffect(() => {
+    if (!firstRun) {
+      const fetchTimer = setTimeout(() => {
+        if (searchGigText && searchGigText.length > 2) {
+          fetchGigs();
+        } else if (searchGigText.length < 1) {
+          fetchGigs();
+        } else {
+          setSearchErrorText("Please enter at least 3 characters for searching.");
+        }
+      }, 2000);
 
-      if (nameIndex !== -1) {
-        rows.push({
-          ...item,
-          index: nameIndex,
-        });
-      }
+      return () => clearTimeout(fetchTimer);
     }
+  }, [searchGigText]);
 
-    return rows.sort((a, b) => a.index - b.index);
-  }, [input]);
+  const fetchGigs = async () => {
+    setLoading(true);
+    setSearchErrorText("");
+    try {
+      const response = await fetch(
+        `http://<YOUR_BACKEND_BASE_URL>/api/search?search=${searchGigText}`
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setGigs(data.gigs || []);
+        setIsError(false);
+      } else {
+        setIsError(true);
+        setErrorText(data.message || "Error fetching gigs");
+      }
+      setLoading(false);
+      setFirstRun(false);
+    } catch (error) {
+      setIsError(true);
+      setErrorText("Cannot fetch gig information!");
+      setLoading(false);
+      setFirstRun(false);
+    }
+  };
+
+  const renderGig = ({ item }) => (
+    <View style={styles.gigCard}>
+      <Text style={styles.gigTitle}>{item.title}</Text>
+      <Text style={styles.gigCategory}>{item.category}</Text>
+    </View>
+  );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.container}>
-        <View style={styles.searchWrapper}>
-          <View style={styles.search}>
-          <View style={styles.header}>
-            <View style={styles.searchIcon}>
-              <FeatherIcon
-                color="#848484"
-                name="search"
-                size={17} />
-            </View>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={val => setInput(val)}
-              placeholder="Start typing.."
-              placeholderTextColor="#848484"
-              returnKeyType="done"
-              style={styles.searchControl}
-              value={input} />
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Text style={styles.navBar}>Product Search</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Type product title or category"
+          value={searchGigText}
+          onChangeText={(text) => setSearchGigText(text)}
+        />
+        {searchErrorText ? (
+          <Text style={styles.errorText}>{searchErrorText}</Text>
+        ) : null}
+
+        {isError ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorMessage}>{errorText}</Text>
           </View>
-        </View>
-
-        <ScrollView contentContainerStyle={styles.searchContent}>
-          {filteredRows.length ? (
-            filteredRows.map(({ img, name, phone }, index) => {
-              return (
-                <View key={index} style={styles.cardWrapper}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      // handle onPress
-                    }}>
-                    <View style={styles.card}>
-                      {img ? (
-                        <Image
-                          alt=""
-                          resizeMode="cover"
-                          source={{ uri: img }}
-                          style={styles.cardImg} />
-                      ) : (
-                        <View style={[styles.cardImg, styles.cardAvatar]}>
-                          <Text style={styles.cardAvatarText}>{name[0]}</Text>
-                        </View>
-                      )}
-
-                      <View style={styles.cardBody}>
-                        <Text style={styles.cardTitle}>{name}</Text>
-
-                        <Text style={styles.cardPhone}>{phone}</Text>
-                      </View>
-
-                      <View style={styles.cardAction}>
-                        <FeatherIcon
-                          color="#9ca3af"
-                          name="chevron-right"
-                          size={22} />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              );
-            })
-          ) : (
-            <Text style={styles.searchEmpty}>No results</Text>
-          )}
-        </ScrollView>
+        ) : (
+          <View style={styles.gigsContainer}>
+            {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : gigs.length < 1 ? (
+              <Text>No Gigs Found</Text>
+            ) : (
+              <FlatList
+                data={gigs}
+                renderItem={renderGig}
+                keyExtractor={(item) => item._id.toString()}
+              />
+            )}
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
-    paddingBottom: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#fff",
   },
-  /** Search */
-  search: {
-    position: 'relative',
-    backgroundColor: '#efefef',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+  navBar: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  searchWrapper: {
-    paddingTop: 8,
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderColor: '#efefef',
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
-  searchIcon: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: 34,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 2,
+  errorText: {
+    color: "red",
   },
-  searchControl: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    paddingLeft: 34,
-    width: '100%',
+  errorContainer: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+  errorMessage: {
+    color: "#fff",
+  },
+  gigsContainer: {
+    flex: 1,
+    backgroundColor: "#e7e7e7",
+    padding: 10,
+  },
+  gigCard: {
+    padding: 10,
+    backgroundColor: "#fff",
+    marginBottom: 10,
+    borderRadius: 5,
+    borderColor: "#ccc",
+    borderWidth: 1,
+  },
+  gigTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "bold",
   },
-  searchContent: {
-    paddingLeft: 24,
-  },
-  searchEmpty: {
-    textAlign: 'center',
-    paddingTop: 16,
-    fontWeight: '500',
-    fontSize: 15,
-    color: '#9ca1ac',
-  },
-  /** Card */
-  card: {
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  cardWrapper: {
-    borderBottomWidth: 1,
-    borderColor: '#d6d6d6',
-  },
-  cardImg: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-  },
-  cardAvatar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#9ca1ac',
-  },
-  cardAvatarText: {
-    fontSize: 19,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  cardBody: {
-    marginRight: 'auto',
-    marginLeft: 12,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#000',
-  },
-  cardPhone: {
-    fontSize: 15,
-    lineHeight: 20,
-    fontWeight: '500',
-    color: '#616d79',
-    marginTop: 3,
-  },
-  cardAction: {
-    paddingRight: 16,
+  gigCategory: {
+    fontSize: 14,
+    color: "#888",
   },
 });
+
+export default Search;

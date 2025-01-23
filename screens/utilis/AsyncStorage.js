@@ -1,75 +1,96 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// API URL
+const API_URL = 'https://unique-burro-surely.ngrok-free.app/api';
+
+// Register user
+export const registerUser = async (email, password) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Registration successful:', data);
+      await AsyncStorage.setItem('accessToken', data.accessToken); // Store access token
+    } else {
+      console.error('Registration failed:', data);
+    }
+  } catch (error) {
+    console.error('Error registering user:', error);
+  }
+};
+
+// Login user
+export const loginUser = async (email, password) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Login successful:', data);
+      await AsyncStorage.setItem('accessToken', data.accessToken); // Store access token
+    } else {
+      console.error('Login failed:', data);
+    }
+  } catch (error) {
+    console.error('Error logging in user:', error);
+  }
+};
+
+// Check if user is logged in (using stored access token)
 export const checkLogin = async () => {
-  const user = await AsyncStorage.getItem("user");
-  if (user) {
-    console.log("User logged in:", JSON.parse(user));
+  const accessToken = await AsyncStorage.getItem("accessToken");
+
+  if (accessToken) {
+    console.log("User logged in with accessToken:", accessToken);
   } else {
     console.log("No user logged in");
   }
 };
 
-export const setItem = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Error setting item:', error);
-    }
-  };
-  
-  export const getItem = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      return value != null ? JSON.parse(value) : null;
-    } catch (error) {
-      console.error('Error getting item:', error);
+// Get the stored access token
+export const getAccessToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem("accessToken");
+    if (token) {
+      console.log("Access token:", token);
+      return token;
+    } else {
+      console.log("No access token found");
       return null;
     }
-  };
-  
-  export const removeItem = async (key) => {
-    try {
-      await AsyncStorage.removeItem(key);
-    } catch (error) {
-      console.error('Error removing item:', error);
-    }
-  };
-  
-  export const mergeItem = async (key, value) => {
-    try {
-      await AsyncStorage.mergeItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Error merging item:', error);
-    }
-  };
-  
-  export const clear = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (error) {
-      console.error('Error clearing AsyncStorage:', error);
-    }
-  };
-  
-  export const getAllKeys = async () => {
-    try {
-      return await AsyncStorage.getAllKeys();
-    } catch (error) {
-      console.error('Error getting all keys:', error);
-      return [];
-    }
-  };
-  
-  export const getAllItems = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      const items = await AsyncStorage.multiGet(keys);
-      return items.reduce((accumulator, [key, value]) => {
-        accumulator[key] = JSON.parse(value);
-        return accumulator;
-      }, {});
-    } catch (error) {
-      console.error('Error getting all items:', error);
-      return {};
-    }
-  };
+  } catch (error) {
+    console.error('Error retrieving access token:', error);
+    return null;
+  }
+};
+
+// Remove access token (logout)
+export const logout = async () => {
+  try {
+    await AsyncStorage.removeItem('accessToken');
+    console.log("User logged out successfully.");
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};

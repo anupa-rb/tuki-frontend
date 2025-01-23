@@ -10,6 +10,20 @@ import {
 } from "react-native";
 
 export default function ChooseRole({ navigation }) {
+
+  const [isSeller, setIsSeller] = useState(null);
+
+  const handleBuyerClick = () =>
+  {
+    setIsSeller("false");
+    navigation.navigate("Login");
+  }
+
+  const handlseSellerClick = () =>
+  {
+    setIsSeller("true");
+    navigation.navigate("Login");
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
@@ -21,9 +35,7 @@ export default function ChooseRole({ navigation }) {
         </View>
         <View style={styles.imageContainer}>
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Buyer Navigation");
-            }}
+            onPress={handleBuyerClick}
           >
             <Image
               source={require("../assets/buyer.png")}
@@ -31,9 +43,7 @@ export default function ChooseRole({ navigation }) {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Seller Navigation");
-            }}
+            onPress={handlseSellerClick}
           >
             <Image
               source={require("../assets/seller.png")}

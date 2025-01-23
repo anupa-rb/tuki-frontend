@@ -14,14 +14,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // Import 
 export default function SignUp({ navigation }) {
   const [form, setForm] = useState({
     name: "",
+    phone:"",
     email: "",
     password: "",
     confirmPassword: "",
+    address:"",
   });
+
+  const API_URL = 'https://unique-burro-surely.ngrok-free.app/api'; // Your API URL
 
   const handleSignUp = async () => {
     // Check if any field is blank
-    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+    if (!form.name ||!form.phone || !form.email || !form.password || !form.confirmPassword || !form.address) {
       alert("Please fill in all the fields.");
       return;
     }
@@ -31,12 +35,39 @@ export default function SignUp({ navigation }) {
       alert("Passwords do not match!");
       return;
     }
+
     try {
-      // Save form data to AsyncStorage
-      await AsyncStorage.setItem("user", JSON.stringify(form));
-      navigation.navigate("Buyer Navigation"); // Redirect to Login after successful sign-up
+      // Send form data to the API
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          password: form.password,
+          address: form.address,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store accessToken in AsyncStorage
+        await AsyncStorage.setItem('accessToken', data.accessToken);
+
+        console.log("Registration successful:", data);
+        // Navigate to Buyer Navigation (or another page after successful sign-up)
+        navigation.navigate("Buyer Navigation");
+      } else {
+        console.error('Registration failed:', data);
+        alert(data.message || "Something went wrong, please try again.");
+      }
     } catch (error) {
-      console.error("Error saving data to AsyncStorage", error);
+      console.error("Error registering user:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -74,6 +105,17 @@ export default function SignUp({ navigation }) {
               value={form.name}
             />
           </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Phone Number</Text>
+            <TextInput
+              clearButtonMode="while-editing"
+              onChangeText={(phone) => setForm({ ...form, phone })}
+              placeholder="9000000000"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.phone}
+            />
+          </View>
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Email Address</Text>
@@ -87,6 +129,21 @@ export default function SignUp({ navigation }) {
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={form.email}
+            />
+          </View>
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Address</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              keyboardType="email-address"
+              onChangeText={(address) => setForm({ ...form, address })}
+              placeholder="john@example.com"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.address}
             />
           </View>
 

@@ -37,8 +37,8 @@ export default function SellerHome({ navigation }) {
     fetchData();
   }, []);
 
-  const handleCreateProject = () => {
-    navigation.navigate("CreateProject");
+  const handleCreateProduct = () => {
+    navigation.navigate("AddProduct");
   };
 
   const renderProject = ({ item }) => (
@@ -100,9 +100,9 @@ export default function SellerHome({ navigation }) {
         />
 
         {/* Create New Project */}
-        <TouchableOpacity style={styles.createButton} onPress={handleCreateProject}>
+        <TouchableOpacity style={styles.createButton} onPress={handleCreateProduct}>
           <FeatherIcon name="plus" size={20} color="#fff" />
-          <Text style={styles.createButtonText}>Create New Project</Text>
+          <Text style={styles.createButtonText}>Add New Product</Text>
         </TouchableOpacity>
         </View>
       </ScrollView>

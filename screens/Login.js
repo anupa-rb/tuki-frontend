@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import {
   StyleSheet,
   SafeAreaView,
@@ -13,38 +14,55 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [form, setForm] = useState({
-    email: "",
+    phone: "",
     password: "",
   });
 
-  // Simulated user data
-  const storedUser = {
-    email: "a",
-    password: "a",
-  };
+  const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
   const loginHandler = async () => {
     // Validate credentials
-    if (!form.email || !form.password) {
-      Alert.alert("Error", "Please fill in both email and password");
+    if (!form.phone || !form.password) {
+      Alert.alert("Error", "Please fill in both phone and password");
       return;
     }
 
-    if (
-      form.email === storedUser.email &&
-      form.password === storedUser.password
-    ) {
-      try {
-        // Save "user data" in AsyncStorage
-        await AsyncStorage.setItem("user", JSON.stringify(storedUser));
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: form.phone,
+          password: form.password,
+        }),
+      });
+      const data = await response.json();
 
+      if (response.ok) {
+        // Store accessToken
+        await AsyncStorage.setItem("accessToken", data.accessToken);
         Alert.alert("Success", "Logged in successfully!");
-        navigation.navigate("ChooseRole");
-      } catch (error) {
-        Alert.alert("Error", "Failed to store user data");
+        console.log(data);
+
+        // Decode the token to get user details
+        const userDetails = jwtDecode(data.accessToken); // Decode the token directly
+        console.log("Decoded User Details:", userDetails);
+
+        // Navigate based on isSeller value
+        if (userDetails.isSeller === true) {
+          navigation.navigate("Seller Navigation");
+        } else {
+          navigation.navigate("Buyer Navigation");
+        }
+      } else {
+        console.error("Login failed:", data);
+        alert(data.message || "Something went wrong, please try again.");
       }
-    } else {
-      Alert.alert("Error", "Invalid email or password");
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert("Error", "Failed to log in. Please try again.");
     }
   };
 
@@ -61,17 +79,17 @@ export default function Login({ navigation }) {
 
         <View style={styles.form}>
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Email address</Text>
+            <Text style={styles.inputLabel}>Phone Number</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
-              placeholder="john@example.com"
+              keyboardType="phone"
+              onChangeText={(phone) => setForm({ ...form, phone })}
+              placeholder="98xxxxxxxx"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.email}
+              value={form.phone}
             />
           </View>
 

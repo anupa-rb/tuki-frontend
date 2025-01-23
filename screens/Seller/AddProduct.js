@@ -1,34 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   TextInput,
-} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import { SafeAreaView } from 'react-native-safe-area-context';
+  Image,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import FeatherIcon from "react-native-vector-icons/Feather";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
 
-export default function AddProduct({navigation}) {
+export default function AddProduct({ navigation }) {
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
+
+  const [file, setFile] = useState(null);
+
+  // Stores any error message
+  const [error, setError] = useState(null);
+
+  //Product Submission
+  const handleSubmit = () => {
+    navigation.navigate("ProductAdded");
+  };
+
+  // Function to pick an image from
+  //the device's media library
+  const pickImage = async () => {
+    try {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Sorry, we need camera roll permission to upload images."
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setFile(result.assets[0].uri); // Use the correct property for the image URI
+        setError(null); // Clear previous errors
+      } else {
+        setError("No image selected");
+      }
+      console.log(result);
+    } catch (err) {
+      setError("An error occurred while selecting the image.");
+    }
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerBack}>
             <FeatherIcon
               color="#1D2A32"
               name="chevron-left"
-              size={30} 
+              size={30}
               onPress={() => {
-                navigation.navigate("MyProfile");
-              }}/>
+                navigation.navigate("Seller Navigation");
+              }}
+            />
           </View>
 
           <Text style={styles.title}>Add New Product</Text>
@@ -40,11 +86,12 @@ export default function AddProduct({navigation}) {
 
             <TextInput
               clearButtonMode="while-editing"
-              onChangeText={name => setForm({ ...form, name })}
+              onChangeText={(name) => setForm({ ...form, name })}
               placeholder="John Doe"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.name} />
+              value={form.name}
+            />
           </View>
 
           <View style={styles.input}>
@@ -55,11 +102,12 @@ export default function AddProduct({navigation}) {
               autoCorrect={false}
               clearButtonMode="while-editing"
               keyboardType="email-address"
-              onChangeText={email => setForm({ ...form, email })}
+              onChangeText={(email) => setForm({ ...form, email })}
               placeholder="john@example.com"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.email} />
+              value={form.email}
+            />
           </View>
 
           <View style={styles.input}>
@@ -68,12 +116,13 @@ export default function AddProduct({navigation}) {
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={password => setForm({ ...form, password })}
+              onChangeText={(password) => setForm({ ...form, password })}
               placeholder="Category"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
-              value={form.password} />
+              value={form.password}
+            />
           </View>
 
           <View style={styles.input}>
@@ -82,21 +131,37 @@ export default function AddProduct({navigation}) {
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={confirmPassword =>
+              onChangeText={(confirmPassword) =>
                 setForm({ ...form, confirmPassword })
               }
               placeholder="Description"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
-              value={form.confirmPassword} />
+              value={form.confirmPassword}
+            />
           </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Upload Image</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={pickImage}>
+            <Text style={styles.button}>Choose Image</Text>
+          </TouchableOpacity>
 
+          {/* Conditionally render the image 
+            or error message */}
+          {file ? (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: file.uri }} style={styles.image} />{" "}
+              <Text>Image Selected</Text>{" "}
+            </View>
+          ) : (
+            <Text style={styles.errorText}>
+              {error || "No image selected."}
+            </Text>
+          )}
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("ProductAdded");
-              }}>
+            <TouchableOpacity onPress={handleSubmit}>
               <View style={styles.btn}>
                 <Text style={styles.btnText}>Add</Text>
               </View>
@@ -117,26 +182,26 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 31,
-    fontWeight: '700',
-    color: '#1D2A32',
+    fontWeight: "700",
+    color: "#1D2A32",
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#929292',
+    fontWeight: "500",
+    color: "#929292",
   },
   /** Header */
   header: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
     marginBottom: 24,
     paddingHorizontal: 24,
   },
   headerBack: {
     padding: 8,
     paddingTop: 0,
-    position: 'relative',
+    position: "relative",
     marginLeft: -16,
     marginBottom: 6,
   },
@@ -155,9 +220,9 @@ const styles = StyleSheet.create({
   formFooter: {
     paddingVertical: 24,
     fontSize: 15,
-    fontWeight: '600',
-    color: '#222',
-    textAlign: 'center',
+    fontWeight: "600",
+    color: "#222",
+    textAlign: "center",
     letterSpacing: 0.15,
   },
   /** Input */
@@ -166,38 +231,43 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 17,
-    fontWeight: '600',
-    color: '#222',
+    fontWeight: "600",
+    color: "#222",
     marginBottom: 8,
   },
   inputControl: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingHorizontal: 16,
     borderRadius: 12,
     fontSize: 15,
-    fontWeight: '500',
-    color: '#222',
+    fontWeight: "500",
+    color: "#222",
     borderWidth: 1,
-    borderColor: '#C9D3DB',
-    borderStyle: 'solid',
+    borderColor: "#C9D3DB",
+    borderStyle: "solid",
+  },
+  avatarImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 9999,
   },
   /** Button */
   btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 30,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    backgroundColor: '#DC5440',
-    borderColor: '#DC5440',
+    backgroundColor: "#DC5440",
+    borderColor: "#DC5440",
   },
   btnText: {
     fontSize: 18,
     lineHeight: 26,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: "600",
+    color: "#fff",
   },
 });

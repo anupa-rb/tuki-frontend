@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import {
   StyleSheet,
   Dimensions,
@@ -49,19 +50,35 @@ export default function BuyerProfile() {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
 
+  const handleLogOut = async () => {
+    try {
+      // Remove the access token from AsyncStorage
+      await AsyncStorage.removeItem("accessToken");
+
+      // Navigate to the login screen after logout (or reset the navigation stack if needed)
+      navigation.navigate("Login"); // Replace "Login" with the actual screen name
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const user = await AsyncStorage.getItem("user");
-        if (user) {
-          const parsedUser = JSON.parse(user);
-          setName(parsedUser.name);
+        const token = await AsyncStorage.getItem("accessToken"); // Get token from AsyncStorage
+        if (token) {
+          const userDetails = jwtDecode(token); // Decode the token directly
+          console.log("Decoded User Details:", userDetails);
+          if (userDetails) {
+            setName(userDetails.name);
+          }
+        } else {
+          console.error("No token found.");
         }
       } catch (error) {
         console.error("Failed to fetch user name:", error);
       }
     };
-
     fetchUserName();
   }, []);
 
@@ -115,9 +132,7 @@ export default function BuyerProfile() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
+            onPress={handleLogOut}
             style={{ flex: 1, paddingHorizontal: 6 }}
           >
             <View style={styles.btnPrimary}>
@@ -125,19 +140,6 @@ export default function BuyerProfile() {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.stats}>
-          <Text style={{ fontWeight: "500" }}>Become Seller</Text>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#0078FF" : "#f4f3f4"}
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-              style={{ marginTop:-12}}
-            />
-            </View>
-        </View>
-
         <View style={styles.list}>
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>My Experience</Text>

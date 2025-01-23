@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import {
   StyleSheet,
   Dimensions,
@@ -61,20 +62,26 @@ export default function MyProfile({ navigation }) {
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const user = await AsyncStorage.getItem("user");
-        if (user) {
-          const parsedUser = JSON.parse(user);
-          setName(parsedUser.name);
+        const token = await AsyncStorage.getItem("accessToken"); // Get token from AsyncStorage
+        if (token) {
+          const userDetails = jwtDecode(token); // Decode the token directly
+          console.log("Decoded User Details:", userDetails);
+          if (userDetails) {
+            setName(userDetails.name);
+          }
+        } else {
+          console.error("No token found.");
         }
       } catch (error) {
         console.error("Failed to fetch user name:", error);
       }
     };
+
     const fetchProducts = async () => {
       try {
         const response = await fetch("https://your-backend-url.com/products");
         const data = await response.json();
-        setProducts(data);
+        setProducts(data); // Populate the products list
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
@@ -85,6 +92,18 @@ export default function MyProfile({ navigation }) {
   }, []);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+const handleLogOut = async () =>{
+  try {
+    // Remove the access token from AsyncStorage
+    await AsyncStorage.removeItem("accessToken");
+    
+    // Navigate to the login screen after logout (or reset the navigation stack if needed)
+    navigation.navigate("Login"); // Replace "Login" with the actual screen name
+  } catch (error) {
+    console.error("Failed to log out:", error);
+  }
+}
 
   const handleAddProduct = () => {
     navigation.navigate("AddProduct", {
@@ -107,6 +126,33 @@ export default function MyProfile({ navigation }) {
       console.error("Failed to delete product:", error);
     }
   };
+
+  // const handleDeleteProduct = async (productId) => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("authToken"); // Assuming you store the token in AsyncStorage
+  //     const response = await fetch(`https://your-backend-url.com/gigs/${productId}`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`, // Add token for authentication
+  //       },
+  //     });
+
+  //     const result = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(result.message || "Failed to delete the product.");
+  //     }
+
+  //     // Update the product list after successful deletion
+  //     setProducts((prev) => prev.filter((product) => product._id !== productId));
+
+  //     alert("Product deleted successfully.");
+  //   } catch (error) {
+  //     console.error("Failed to delete product:", error);
+  //     alert(`Error: ${error.message}`);
+  //   }
+  // };
 
   return (
     <SafeAreaView>
@@ -133,7 +179,7 @@ export default function MyProfile({ navigation }) {
 
           <View style={styles.profileBody}>
             {/* Dynamically set the profile title */}
-            <Text style={styles.profileTitle}>{name}Anupa</Text>
+            <Text style={styles.profileTitle}>{name}</Text>
 
             <Text style={styles.profileSubtitle}>
               Ratings:
@@ -150,18 +196,6 @@ export default function MyProfile({ navigation }) {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.stats}>
-          <Text style={{ fontWeight: "500" }}>Become Seller</Text>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#0078FF" : "#f4f3f4"}
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-              style={{ marginTop: -12 }}
-            />
-          </View>
-        </View>
         <View style={styles.contentActions}>
           <TouchableOpacity
             onPress={() => {
@@ -175,9 +209,7 @@ export default function MyProfile({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
+            onPress={handleLogOut}
             style={{ flex: 1, paddingHorizontal: 6 }}
           >
             <View style={styles.btnPrimary}>
@@ -190,9 +222,7 @@ export default function MyProfile({ navigation }) {
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>My Products</Text>
 
-            <TouchableOpacity
-              onPress={handleAddProduct}
-            >
+            <TouchableOpacity onPress={handleAddProduct}>
               <Text style={styles.listAction}>Add</Text>
             </TouchableOpacity>
           </View>
@@ -221,7 +251,12 @@ export default function MyProfile({ navigation }) {
                       <Text style={styles.cardTitle}>{label}</Text>
                       <Text style={styles.cardSubtitle}>{company}</Text>
                     </View>
-                    <AntDesign name="delete" size={24} color="red" onPress={() => handleDeleteProduct(id)}/>
+                    <AntDesign
+                      name="delete"
+                      size={24}
+                      color="red"
+                      onPress={() => handleDeleteProduct(id)}
+                    />
                   </View>
                 </View>
               </TouchableOpacity>
@@ -555,7 +590,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginRight:10,
+    marginRight: 10,
   },
   cardFooterText: {
     fontSize: 12,
