@@ -14,12 +14,12 @@ export default function ChooseRole({ navigation }) {
 
   const handleBuyerClick = () => {
     setIsSeller("false");
-    navigation.navigate("SignUp");
+    navigation.navigate("SignUp", { isSeller: false });
   };
 
   const handlseSellerClick = () => {
     setIsSeller("true");
-    navigation.navigate("SignUp");
+    navigation.navigate("SignUp", { isSeller: true });
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
