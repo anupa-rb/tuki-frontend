@@ -44,18 +44,6 @@ const SellerTabNavigation = () => {
           },
         }}
       />
-        <Tab.Screen 
-        name="Search" 
-        component={Search}
-        options={{
-            tabBarIcon:({focused}) => {
-                return <Ionicons name ={"search-sharp"} 
-                size={24}
-                //color={focused ? black : gray}
-                />
-            }
-        }}
-        />
               <Tab.Screen
         name="Message"
         component={Message}
