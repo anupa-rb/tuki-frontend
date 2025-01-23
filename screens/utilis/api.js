@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://your-backend-url.com/api";
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -20,12 +20,12 @@ export const setAuthToken = (token) => {
 
 // Create a new message
 export const createMessage = async (conversationID, description) => {
-    return await api.post("/messages", { conversationID, description });
-  };
-  
-  // Get messages for a specific conversation
-  export const getMessages = async (conversationID) => {
-    return await api.get(`/messages/${conversationID}`);
-  };
-  
+  return await api.post("/messages", { conversationID, description });
+};
+
+// Get messages for a specific conversation
+export const getMessages = async (conversationID) => {
+  return await api.get(`/messages/${conversationID}`);
+};
+
 export default api;

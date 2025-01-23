@@ -13,7 +13,7 @@ import {
 import { useRoute } from "@react-navigation/native"; // For accessing params
 import axios from "axios";
 
-const API_URL = "https://your-backend-url/api";
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
 const Message = () => {
   const route = useRoute();
