@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRoute } from "@react-navigation/native";
 import {
   StyleSheet,
   SafeAreaView,
@@ -14,18 +15,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // Import 
 export default function SignUp({ navigation }) {
   const [form, setForm] = useState({
     name: "",
-    phone:"",
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
-    address:"",
+    address: "",
   });
+  const route = useRoute();
+  const { isSeller } = route.params;
 
-  const API_URL = 'https://unique-burro-surely.ngrok-free.app/api'; // Your API URL
+  const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
   const handleSignUp = async () => {
     // Check if any field is blank
-    if (!form.name ||!form.phone || !form.email || !form.password || !form.confirmPassword || !form.address) {
+    if (
+      !form.name ||
+      !form.phone ||
+      !form.email ||
+      !form.password ||
+      !form.confirmPassword ||
+      !form.address
+    ) {
       alert("Please fill in all the fields.");
       return;
     }
@@ -39,9 +49,9 @@ export default function SignUp({ navigation }) {
     try {
       // Send form data to the API
       const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: form.name,
@@ -49,6 +59,7 @@ export default function SignUp({ navigation }) {
           email: form.email,
           password: form.password,
           address: form.address,
+          isSeller: isSeller,
         }),
       });
 
@@ -56,13 +67,17 @@ export default function SignUp({ navigation }) {
 
       if (response.ok) {
         // Store accessToken in AsyncStorage
-        await AsyncStorage.setItem('accessToken', data.accessToken);
+        await AsyncStorage.setItem("accessToken", data.accessToken);
 
         console.log("Registration successful:", data);
         // Navigate to Buyer Navigation (or another page after successful sign-up)
-        navigation.navigate("Buyer Navigation");
+        if (isSeller === true) {
+          navigation.navigate("Seller Navigation");
+        } else {
+          navigation.navigate("Buyer Navigation");
+        }
       } else {
-        console.error('Registration failed:', data);
+        console.error("Registration failed:", data);
         alert(data.message || "Something went wrong, please try again.");
       }
     } catch (error) {
