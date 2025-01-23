@@ -8,22 +8,39 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const Chat = ({ route, navigation}) => {
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+
+const Chat = ({ route, navigation }) => {
   const { name = "User" } = route.params || {}; // Provide a fallback value for `name`
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim()) {
-      setMessages([
-        ...messages,
-        { id: messages.length.toString(), text: message },
-      ]);
+      // Optimistic UI update
+      const newMessage = {
+        id: messages.length + 1,
+        text: message,
+        isSender: true,
+      };
+      setMessages([newMessage, ...messages]);
       setMessage("");
+
+      try {
+        // Send message to the backend
+        await fetch("https://unique-burro-surely.ngrok-free.app/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: message }),
+        });
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
@@ -45,19 +62,22 @@ const Chat = ({ route, navigation}) => {
           <Text style={styles.chatHeader}>{name}</Text>
         </View>
       </SafeAreaView>
-      <View style={styles.chatContainer}>
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.messageContainer}>
-              <Text style={styles.messageText}>{item.text}</Text>
-            </View>
-          )}
-          inverted
-        />
-      </View>
 
+      <View style={styles.chatContainer}>
+        <ScrollView contentContainerStyle={styles.messageContainer}>
+          {messages.map(({ id, text, isSender }) => (
+            <View
+              key={id}
+              style={[
+                styles.messageBubble,
+                isSender ? styles.senderBubble : styles.receiverBubble,
+              ]}
+            >
+              <Text style={styles.messageText}>{text}</Text>
+            </View>
+          ))}
+        </ScrollView>
+        </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -79,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   headerContainer: {
-    flexDirection:"row",
+    flexDirection: "row",
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
@@ -87,7 +107,7 @@ const styles = StyleSheet.create({
   chatHeader: {
     fontSize: 20,
     fontWeight: "bold",
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
   },
   chatContainer: {
     flex: 1,
@@ -104,6 +124,26 @@ const styles = StyleSheet.create({
   messageText: {
     color: "#fff",
     fontSize: 16,
+  },
+  messageContainer: {
+    padding: 16,
+  },
+  messageBubble: {
+    maxWidth: "70%",
+    padding: 12,
+    borderRadius: 16,
+    marginBottom: 10,
+  },
+  senderBubble: {
+    alignSelf: "flex-end",
+    backgroundColor: "#0084ff",
+  },
+  receiverBubble: {
+    alignSelf: "flex-start",
+    backgroundColor: "#e5e5ea",
+  },
+  messageText: {
+    color: "#fff",
   },
   inputContainer: {
     flexDirection: "row",

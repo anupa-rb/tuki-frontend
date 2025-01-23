@@ -12,6 +12,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+
 const SellerChat = ({ route, navigation}) => {
   const { name = "User" } = route.params || {}; // Provide a fallback value for `name`
   const [message, setMessage] = useState("");

@@ -12,6 +12,7 @@ import {
   Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
@@ -46,7 +47,7 @@ const items = [
 ];
 const CARD_WIDTH = Math.min(Dimensions.get("screen").width * 0.75, 400);
 
-export default function BuyerProfile() {
+export default function BuyerProfile({navigation}) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -54,9 +55,14 @@ export default function BuyerProfile() {
     try {
       // Remove the access token from AsyncStorage
       await AsyncStorage.removeItem("accessToken");
-
-      // Navigate to the login screen after logout (or reset the navigation stack if needed)
-      navigation.navigate("Login"); // Replace "Login" with the actual screen name
+  
+      // Reset the navigation stack to ensure no back navigation
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Login" }], // Replace "Login" with your login screen name
+        })
+      );
     } catch (error) {
       console.error("Failed to log out:", error);
     }
