@@ -117,7 +117,7 @@ export default function Login({ navigation }) {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("SignUp");
+              navigation.navigate("ChooseRole");
             }}
           >
             <Text style={styles.formFooter}>
