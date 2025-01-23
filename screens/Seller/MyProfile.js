@@ -20,20 +20,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-const items = [
-  {
-    label: "Duna",
-    company: "Rs.5",
-  },
-  {
-    label: "Tapari",
-    company: "Rs. 20",
-  },
-  {
-    label: "Doko",
-    company: "Rs.50",
-  },
-];
 const reviews = [
   {
     user: "John Doe",
@@ -60,17 +46,14 @@ const reviews = [
 export default function MyProfile({ navigation }) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
-  const [products, setProducts] = useState({
-    title: "",
-    price: "",
-  });
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const token = await AsyncStorage.getItem("accessToken"); // Get token from AsyncStorage
+        const token = await AsyncStorage.getItem("accessToken");
         if (token) {
-          const userDetails = jwtDecode(token); // Decode the token directly
+          const userDetails = jwtDecode(token);
           console.log("Decoded User Details:", userDetails);
           if (userDetails) {
             setName(userDetails.name);
@@ -85,9 +68,14 @@ export default function MyProfile({ navigation }) {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/products`);
+        const response = await fetch(`${API_URL}/gig/get`);
         const data = await response.json();
-        setProducts(data); // Populate the products list
+        console.log(data);
+        if (Array.isArray(data.data)) {
+          setProducts(data.data); // Update with the correct data
+        } else {
+          console.error("Data.products is not an array");
+        } // Populate the products list
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
@@ -101,10 +89,7 @@ export default function MyProfile({ navigation }) {
 
   const handleLogOut = async () => {
     try {
-      // Remove the access token from AsyncStorage
       await AsyncStorage.removeItem("accessToken");
-
-      // Reset the navigation stack to ensure no back navigation
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -119,8 +104,7 @@ export default function MyProfile({ navigation }) {
   const handleAddProduct = () => {
     navigation.navigate("AddProduct", {
       onGoBack: async () => {
-        // Refresh the products list after adding a product
-        const response = await fetch(`${API_URL}/products`);
+        const response = await fetch(`${API_URL}/gig/get`);
         const data = await response.json();
         setProducts(data);
       },
@@ -129,12 +113,12 @@ export default function MyProfile({ navigation }) {
 
   const handleDeleteProduct = async (productId) => {
     try {
-      const token = await AsyncStorage.getItem("authToken"); // Assuming you store the token in AsyncStorage
+      const token = await AsyncStorage.getItem("authToken");
       const response = await fetch(`${API_URL}/gigs/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add token for authentication
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -144,11 +128,9 @@ export default function MyProfile({ navigation }) {
         throw new Error(result.message || "Failed to delete the product.");
       }
 
-      // Update the product list after successful deletion
       setProducts((prev) =>
         prev.filter((product) => product._id !== productId)
       );
-
       alert("Product deleted successfully.");
     } catch (error) {
       console.error("Failed to delete product:", error);
@@ -180,9 +162,7 @@ export default function MyProfile({ navigation }) {
           </View>
 
           <View style={styles.profileBody}>
-            {/* Dynamically set the profile title */}
             <Text style={styles.profileTitle}>{name}</Text>
-
             <Text style={styles.profileSubtitle}>
               Ratings:
               <FontAwesome
@@ -223,7 +203,6 @@ export default function MyProfile({ navigation }) {
         <View style={styles.list}>
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>My Gigs</Text>
-
             <TouchableOpacity onPress={handleAddProduct}>
               <Text style={styles.listAction}>Add</Text>
             </TouchableOpacity>
@@ -234,42 +213,47 @@ export default function MyProfile({ navigation }) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
           >
-            {items.map(({ products }, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  // handle onPress
-                }}
-              >
-                <View style={styles.card}>
-                  <View style={styles.cardTop}>
-                    <Image
-                      source={require("../../assets/Anupa.png")}
-                      style={styles.cardImage}
-                    />
-                  </View>
-                  <View style={styles.cardFooter}>
-                    <View style={styles.cardBody}>
-                      <Text style={styles.cardTitle}>{products.title}</Text>
-                      <Text style={styles.cardSubtitle}>{products.price}</Text>
+            {Array.isArray(products) && products.length > 0 ? (
+              products.map((product, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                >
+                  <View style={styles.card}>
+                    <View style={styles.cardTop}>
+                      <Image
+                        source={{uri: product.coverImage}}
+                        style={styles.cardImage}
+                      />
                     </View>
-                    <AntDesign
-                      name="delete"
-                      size={24}
-                      color="red"
-                      onPress={() => handleDeleteProduct(id)}
-                    />
+                    <View style={styles.cardFooter}>
+                      <View style={styles.cardBody}>
+                        <Text style={styles.cardTitle}>{product.title}</Text>
+                        <Text style={styles.cardSubtitle}>
+                          {product.price}
+                        </Text>
+                      </View>
+                      <AntDesign
+                        name="delete"
+                        size={24}
+                        color="red"
+                        onPress={() => handleDeleteProduct(product._id)}
+                      />
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No products available</Text>
+            )}
           </ScrollView>
         </View>
 
         <View style={styles.list}>
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>My Reviews</Text>
-
             <TouchableOpacity
               onPress={() => {
                 // Navigate to a full review screen if required

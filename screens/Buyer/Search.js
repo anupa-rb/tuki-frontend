@@ -9,58 +9,48 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const Search = ({navigation}) => {
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+
+const Search = () => {
   const [gigs, setGigs] = useState([]);
   const [searchGigText, setSearchGigText] = useState("");
   const [searchErrorText, setSearchErrorText] = useState("");
-  const [errorText, setErrorText] = useState("");
-  const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [firstRun, setFirstRun] = useState(true);
 
   useEffect(() => {
-    fetchGigs();
-  }, []);
+    const fetchTimer = setTimeout(() => {
+      if (searchGigText.length > 2) {
+        fetchGigs();
+      } else if (searchGigText.length < 1) {
+        setGigs([]);
+        setSearchErrorText("");
+      } else {
+        setSearchErrorText("Please enter at least 3 characters for searching.");
+      }
+    }, 1000);
 
-  useEffect(() => {
-    if (!firstRun) {
-      const fetchTimer = setTimeout(() => {
-        if (searchGigText && searchGigText.length > 2) {
-          fetchGigs();
-        } else if (searchGigText.length < 1) {
-          fetchGigs();
-        } else {
-          setSearchErrorText("Please enter at least 3 characters for searching.");
-        }
-      }, 2000);
-
-      return () => clearTimeout(fetchTimer);
-    }
+    return () => clearTimeout(fetchTimer);
   }, [searchGigText]);
 
   const fetchGigs = async () => {
     setLoading(true);
     setSearchErrorText("");
+
     try {
       const response = await fetch(
-        `http://<YOUR_BACKEND_BASE_URL>/api/search?search=${searchGigText}`
+        `${API_URL}/gig/search?search=${encodeURIComponent(searchGigText)}`
       );
       const data = await response.json();
 
       if (response.ok) {
-        setGigs(data.gigs || []);
-        setIsError(false);
+        setGigs(data.data || []);
       } else {
-        setIsError(true);
-        setErrorText(data.message || "Error fetching gigs");
+        setSearchErrorText(data.message || "Error fetching gigs");
       }
-      setLoading(false);
-      setFirstRun(false);
     } catch (error) {
-      setIsError(true);
-      setErrorText("Cannot fetch gig information!");
+      setSearchErrorText("Cannot fetch gig information!");
+    } finally {
       setLoading(false);
-      setFirstRun(false);
     }
   };
 

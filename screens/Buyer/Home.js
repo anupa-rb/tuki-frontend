@@ -13,6 +13,9 @@ import {
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
 const categories_items = [
   {
@@ -50,6 +53,7 @@ const data = [
 
 const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+    const [products, setProducts] = useState([]);
 
   const handleScroll = (event) => {
     const index = Math.round(
@@ -57,6 +61,25 @@ const Home = ({ navigation }) => {
     );
     setCurrentIndex(index);
   };
+
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${API_URL}/gig/get`);
+        const data = await response.json();
+        console.log(data);
+        if (Array.isArray(data.data)) {
+          setProducts(data.data); // Update with the correct data
+        } else {
+          console.error("Data.products is not an array");
+        } // Populate the products list
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.cCard}>
@@ -182,15 +205,41 @@ const Home = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
         >
-          {categories_items.map(({ label }, index) => (
-            <View key={index} style={styles.card}>
-              <Image
-                source={require("../../assets/Anupa.png")}
-                style={styles.cardImage}
-              />
-              <Text style={styles.cardTitle}>{label}</Text>
-            </View>
-          ))}
+         {Array.isArray(products) && products.length > 0 ? (
+              products.map((product, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                >
+                  <View style={styles.card}>
+                    <View style={styles.cardTop}>
+                      <Image
+                        source={{uri: product.coverImage}}
+                        style={styles.cardImage}
+                      />
+                    </View>
+                    <View style={styles.cardFooter}>
+                      <View style={styles.cardBody}>
+                        <Text style={styles.cardTitle}>{product.title}</Text>
+                        <Text style={styles.cardSubtitle}>
+                          {product.price}
+                        </Text>
+                      </View>
+                      <AntDesign
+                        name="delete"
+                        size={24}
+                        color="red"
+                        onPress={() => handleDeleteProduct(product._id)}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No products available</Text>
+            )}
         </ScrollView>
       </ScrollView>
     </SafeAreaView>
@@ -343,5 +392,67 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
+  },
+  /*Card*/
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+    marginRight: 12,
+  },
+  cardTop: {
+    flexDirection: "row",
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  cardIcon: {
+    backgroundColor: "#F0F0F0",
+    borderRadius: 9999,
+    padding: 6,
+  },
+  cardBody: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    paddingLeft: 16,
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    lineHeight: 18,
+    color: "#121a26",
+  },
+  cardSubtitle: {
+    fontSize: 13,
+    fontWeight: "600",
+    lineHeight: 18,
+    color: "#778599",
+  },
+  cardFooter: {
+    marginBottom: 10,
+    paddingTop: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginRight: 10,
+  },
+  cardFooterText: {
+    fontSize: 12,
+    fontWeight: "600",
+    lineHeight: 16,
+    color: "#778599",
+  },
+  cardImage: {
+    width: 180,
+    height: 150,
+    borderRadius: 12,
   },
 });
