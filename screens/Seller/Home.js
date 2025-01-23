@@ -22,8 +22,9 @@ export default function SellerHome({ navigation }) {
       try {
         // Replace with API calls
         const projects = [
-          { id: "1", title: "Logo Design", client: "John Doe" },
-          { id: "2", title: "Website Development", client: "Jane Smith" },
+          { id: "1", title: "Knitting Sweater", client: "Sita Baral" },
+          { id: "2", title: "Lakh Batti", client: "Hari Sharma" },
+          { id: "3", title: "Tapari", client: "Nisha Chaudhary" },
         ];
         const userEarnings = 5000; // Example data
 
@@ -52,58 +53,61 @@ export default function SellerHome({ navigation }) {
 
   return (
     <SafeAreaView>
-            <View style={styles.header}>
-              <Image source={require("../../assets/LOGO.png")} style={styles.image} />
-              <View style={styles.rightContainer}>
-                <TouchableOpacity
-                  style={{ paddingHorizontal: 10, alignSelf: "center" }}
-                  onPress={() => {
-                    navigation.navigate("Notification");
-                  }}
-                >
-                  <FeatherIcon color="#6a99e3" name="bell" size={28} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("BuyerProfile");
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/Anupa.png")}
-                    style={styles.avatarMD}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-        {/* Earnings Overview */}
-        <View style={styles.earningsCard}>
-          <Text style={styles.earningsTitle}>Total Earnings</Text>
-          <Text style={styles.earningsAmount}>${earnings}</Text>
-        </View>
-
-        {/* Active Projects */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Active Projects</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Projects")}>
-            <Text style={styles.viewAll}>View All</Text>
+      <View style={styles.header}>
+        <Image source={require("../../assets/LOGO.png")} style={styles.image} />
+        <View style={styles.rightContainer}>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 10, alignSelf: "center" }}
+            onPress={() => {
+              navigation.navigate("Notification");
+            }}
+          >
+            <FeatherIcon color="#6a99e3" name="bell" size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("BuyerProfile");
+            }}
+          >
+            <Image
+              source={require("../../assets/Anupa.png")}
+              style={styles.avatarMD}
+            />
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={activeProjects}
-          renderItem={renderProject}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.projectList}
-        />
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {/* Earnings Overview */}
+          <View style={styles.earningsCard}>
+            <Text style={styles.earningsTitle}>Total Earnings</Text>
+            <Text style={styles.earningsAmount}>Rs.{earnings}</Text>
+          </View>
 
-        {/* Create New Project */}
-        <TouchableOpacity style={styles.createButton} onPress={handleCreateProduct}>
-          <FeatherIcon name="plus" size={20} color="#fff" />
-          <Text style={styles.createButtonText}>Add New Product</Text>
-        </TouchableOpacity>
+          {/* Active Projects */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Active Projects</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Projects")}>
+              <Text style={styles.viewAll}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={activeProjects}
+            renderItem={renderProject}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.projectList}
+          />
+
+          {/* Create New Project */}
+          <TouchableOpacity
+            style={styles.createButton}
+            onPress={handleCreateProduct}
+          >
+            <FeatherIcon name="plus" size={20} color="#fff" />
+            <Text style={styles.createButtonText}>Add a New Service</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

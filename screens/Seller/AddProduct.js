@@ -14,6 +14,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import Picker from "@react-native-picker/picker";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
@@ -36,6 +37,7 @@ export default function AddProduct({ navigation }) {
       // Retrieve the token from AsyncStorage
       const token = await AsyncStorage.getItem("accessToken");
       console.log("Retrieved Token:", token);
+      console.log(file);
 
       if (!token) {
         console.error("No token found");
@@ -62,6 +64,8 @@ export default function AddProduct({ navigation }) {
         type: file.type,
         name: file.name,
       });
+
+      console.log(formData);
 
       // Make the API call
       const response = await fetch(`${API_URL}/gig/create`, {
@@ -139,17 +143,17 @@ export default function AddProduct({ navigation }) {
             />
           </View>
 
-          <Text style={styles.title}>Add New Product</Text>
+          <Text style={styles.title}>Add a New Service</Text>
         </View>
 
         <View style={styles.form}>
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Name of Product</Text>
+            <Text style={styles.inputLabel}>Name of Service</Text>
 
             <TextInput
               clearButtonMode="while-editing"
               onChangeText={(title) => setForm({ ...form, title })}
-              placeholder="John Doe"
+              placeholder="Knitting Sweaters"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={form.title}
@@ -157,15 +161,15 @@ export default function AddProduct({ navigation }) {
           </View>
 
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Price</Text>
+            <Text style={styles.inputLabel}>Price (Nrs.)</Text>
 
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              keyboardType="email-address"
+              // keyboardType="email-address"
               onChangeText={(price) => setForm({ ...form, price })}
-              placeholder="john@example.com"
+              placeholder="000"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={form.price}
@@ -179,10 +183,9 @@ export default function AddProduct({ navigation }) {
               autoCorrect={false}
               clearButtonMode="while-editing"
               onChangeText={(category) => setForm({ ...form, category })}
-              placeholder="Category"
+              placeholder="duna"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              secureTextEntry={true}
               value={form.category}
             />
           </View>
@@ -197,12 +200,11 @@ export default function AddProduct({ navigation }) {
               placeholder="Description"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              secureTextEntry={true}
               value={form.description}
             />
           </View>
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Delivery Time</Text>
+            <Text style={styles.inputLabel}>Delivery Time (Days)</Text>
 
             <TextInput
               autoCorrect={false}
@@ -210,35 +212,29 @@ export default function AddProduct({ navigation }) {
               onChangeText={(deliveryTime) =>
                 setForm({ ...form, deliveryTime })
               }
-              placeholder="5 days"
+              placeholder="0 days"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              secureTextEntry={true}
               value={form.deliveryTime}
             />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>Upload Image</Text>
-            <Button title="Pick an Image" onPress={pickImage} />
 
             {file && (
               <Image
                 source={{ uri: file.uri }}
-                style={{ width: 200, height: 200 }}
+                style={{ width: 312, height: 200 }}
               />
             )}
-            <Button
-              title="Upload Image"
-              onPress={handleSubmit}
-              disabled={!file}
-            />
+            <Button title="Pick an Image" onPress={pickImage} />
           </View>
 
           {/* Conditionally render the image 
             or error message */}
           {file ? (
             <View style={styles.imageContainer}>
-              <Text>Image Selected</Text>{" "}
+              {/* <Text>Image Selected</Text>{" "} */}
             </View>
           ) : (
             <Text style={styles.errorText}>
