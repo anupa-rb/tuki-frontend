@@ -6,6 +6,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   FlatList,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -22,14 +24,14 @@ const Search = () => {
       if (searchGigText.length > 2) {
         fetchGigs();
       } else if (searchGigText.length < 1) {
-        setGigs([]);
-        setSearchErrorText("");
+        setGigs([]); // Reset gigs if search text is empty
+        setSearchErrorText(""); // Clear any error text
       } else {
         setSearchErrorText("Please enter at least 3 characters for searching.");
       }
     }, 1000);
 
-    return () => clearTimeout(fetchTimer);
+    return () => clearTimeout(fetchTimer); // Cleanup timeout
   }, [searchGigText]);
 
   const fetchGigs = async () => {
@@ -41,13 +43,19 @@ const Search = () => {
         `${API_URL}/gig/search?search=${encodeURIComponent(searchGigText)}`
       );
       const data = await response.json();
+      console.log("API Response Data:", data);  // Add this log to inspect the response
 
       if (response.ok) {
-        setGigs(data.data || []);
+        if (data && data.gigs && Array.isArray(data.gigs)) {
+          setGigs(data.gigs || []); // Ensure we only set gigs if it's an array
+        } else {
+          setSearchErrorText("No gigs found.");
+        }
       } else {
         setSearchErrorText(data.message || "Error fetching gigs");
       }
     } catch (error) {
+      console.log("Error fetching gigs:", error); // Log the error to console
       setSearchErrorText("Cannot fetch gig information!");
     } finally {
       setLoading(false);
@@ -56,8 +64,26 @@ const Search = () => {
 
   const renderGig = ({ item }) => (
     <View style={styles.gigCard}>
-      <Text style={styles.gigTitle}>{item.title}</Text>
-      <Text style={styles.gigCategory}>{item.category}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          // Handle gig press (e.g., navigate to details)
+        }}
+      >
+        <View style={styles.card}>
+          <View style={styles.cardTop}>
+            <Image
+              source={{ uri: item.coverImage }} // Update to the correct image field
+              style={styles.cardImage}
+            />
+          </View>
+          <View style={styles.cardFooter}>
+            <View style={styles.cardBody}>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardSubtitle}>{item.price}</Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 
@@ -75,24 +101,16 @@ const Search = () => {
           <Text style={styles.errorText}>{searchErrorText}</Text>
         ) : null}
 
-        {isError ? (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorMessage}>{errorText}</Text>
-          </View>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+        ) : gigs.length < 1 ? (
+          <Text></Text>
         ) : (
-          <View style={styles.gigsContainer}>
-            {loading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
-            ) : gigs.length < 1 ? (
-              <Text>No Gigs Found</Text>
-            ) : (
-              <FlatList
-                data={gigs}
-                renderItem={renderGig}
-                keyExtractor={(item) => item._id.toString()}
-              />
-            )}
-          </View>
+          <FlatList
+            data={gigs}
+            renderItem={renderGig}
+            keyExtractor={(item) => item._id.toString()}
+          />
         )}
       </View>
     </SafeAreaView>
@@ -120,18 +138,8 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
   },
-  errorContainer: {
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 5,
-  },
-  errorMessage: {
-    color: "#fff",
-  },
-  gigsContainer: {
-    flex: 1,
-    backgroundColor: "#e7e7e7",
-    padding: 10,
+  loader: {
+    marginTop: 20,
   },
   gigCard: {
     padding: 10,
@@ -141,11 +149,29 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1,
   },
-  gigTitle: {
+  card: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cardTop: {
+    flex: 1,
+  },
+  cardImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 5,
+  },
+  cardFooter: {
+    paddingTop: 10,
+  },
+  cardBody: {
+    paddingLeft: 10,
+  },
+  cardTitle: {
     fontSize: 16,
     fontWeight: "bold",
   },
-  gigCategory: {
+  cardSubtitle: {
     fontSize: 14,
     color: "#888",
   },
