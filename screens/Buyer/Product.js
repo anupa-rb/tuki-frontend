@@ -32,7 +32,7 @@ navigation.navigate("Chat", {conversationID: 1});
             }}
           >
             <Image
-              source={require("../../assets/Anupa.png")}
+              source={require("../../assets/user.jpg")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>

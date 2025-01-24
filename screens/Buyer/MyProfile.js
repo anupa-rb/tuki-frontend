@@ -16,12 +16,6 @@ import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const tags = ["ios", "android", "web", "ui", "ux"];
-const stats = [
-  { label: "Location", value: "USA" },
-  { label: "Job Type", value: "Full Time" },
-  { label: "Experience", value: "6 years" },
-];
 const items = [
   {
     icon: "figma",
@@ -107,7 +101,7 @@ export default function BuyerProfile({navigation}) {
         <View style={styles.profileTop}>
           <View style={styles.avatar}>
             <Image
-              source={require("../../assets/Anupa.png")}
+              source={require("../../assets/user.jpg")}
               style={styles.avatarImg}
             />
             <View style={styles.avatarNotification} />

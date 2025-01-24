@@ -33,7 +33,7 @@ const Orders = ({navigation}) => {
               }}
             >
               <Image
-                source={require("../../assets/Anupa.png")}
+                source={require("../../assets/user.jpg")}
                 style={styles.avatarMD}
               />
             </TouchableOpacity>
