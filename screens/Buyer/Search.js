@@ -8,8 +8,10 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FeatherIcon from "react-native-vector-icons/Feather";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
@@ -88,15 +90,51 @@ const Search = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text style={styles.navBar}>Product Search</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Type product title or category"
-          value={searchGigText}
-          onChangeText={(text) => setSearchGigText(text)}
-        />
+    <SafeAreaView>
+            <View style={styles.header}>
+              <Image source={require("../../assets/LOGO.png")} style={styles.logo} />
+              <View style={styles.rightContainer}>
+                <TouchableOpacity
+                  style={{ paddingHorizontal: 10, alignSelf: "center" }}
+                  onPress={() => {
+                    navigation.navigate("Notification");
+                  }}
+                >
+                  <FeatherIcon color="#6a99e3" name="bell" size={28} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("BuyerProfile");
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/Anupa.png")}
+                    style={styles.avatarMD}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+        <View style={styles.container}>
+        <Text style={styles.title}>Product Search</Text>
+         <View style={styles.searchWrapper}>
+                  <View style={styles.search}>
+                    <View style={styles.searchIcon}>
+                      <FeatherIcon color="#848484" name="search" size={17} />
+                    </View>
+        
+                    <TextInput
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      clearButtonMode="while-editing"
+                      placeholderTextColor="#848484"
+                      returnKeyType="done"
+                      style={styles.searchControl}
+                      placeholder="Type product title or category"
+                      value={searchGigText}
+                      onChangeText={(text) => setSearchGigText(text)}
+                    />
+                  </View>
+                </View>
         {searchErrorText ? (
           <Text style={styles.errorText}>{searchErrorText}</Text>
         ) : null}
@@ -112,21 +150,84 @@ const Search = () => {
             keyExtractor={(item) => item._id.toString()}
           />
         )}
-      </View>
+        </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#fff",
+    paddingHorizontal: 24,
+    justifyContent: "space-around",
   },
-  navBar: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#1d1d1d",
+    marginBottom: 12,
+  },
+    /** Header */
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 15,
+    },
+    rightContainer: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+    },
+    avatarMD: {
+      width: 50,
+      height: 50,
+      borderRadius: 9999,
+    },
+    logo: {
+      width: 100,
+      height: 100,
+      resizeMode: "contain",
+      alignSelf: "center",
+    },
+    /** Search */
+  search: {
+    position: "relative",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  searchWrapper: {
+    paddingTop: 8,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderColor: "#efefef",
+  },
+  searchIcon: {
+    position: "flex",
+    top: 0,
+    bottom: 0,
+    left: 25,
+    width: 34,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+  searchControl: {
+    paddingVertical: 10,
+    paddingLeft: 34,
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  searchContent: {
+    paddingLeft: 24,
+  },
+  searchEmpty: {
+    textAlign: "center",
+    paddingTop: 16,
+    fontWeight: "500",
+    fontSize: 15,
+    color: "#9ca1ac",
   },
   input: {
     borderWidth: 1,

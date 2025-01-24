@@ -17,22 +17,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-const categories_items = [
-  {
-    icon: "code",
-    label: "Duna",
-    company: "8 endorsements",
-    jobType: "2 experiences",
-    years: "GitHub & Figma",
-  },
-  {
-    icon: "git-merge",
-    label: "Tapari",
-    company: "3 endorsements",
-    jobType: "1 experience",
-    years: "GitHub",
-  },
-];
 
 const data = [
   {
