@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 
-const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // API URL
 
 export default function AddProduct({ navigation }) {
   const [form, setForm] = useState({
@@ -46,11 +46,11 @@ export default function AddProduct({ navigation }) {
       formData.append("category", form.category);
       formData.append("description", form.description);
       formData.append("deliveryTime", form.deliveryTime);
-      formData.append("coverImage", {
-        uri: file.uri,
-        type: file.type,
-        name: file.name,
-      });
+      // formData.append("coverImage", {
+      //   uri: file.uri,
+      //   type: file.type,
+      //   name: file.name,
+      // });
 
       console.log("Form Data:", formData);
 
@@ -58,9 +58,12 @@ export default function AddProduct({ navigation }) {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
+
+      // console.log("check pass");
 
       if (response.ok) {
         navigation.navigate("ProductAdded");
@@ -77,35 +80,36 @@ export default function AddProduct({ navigation }) {
     }
   };
 
-  const pickImage = async () => {
-    try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          "Sorry, we need camera roll permission to upload images."
-        );
-        return;
-      }
+  // const pickImage = async () => {
+  //   try {
+  //     const { status } =
+  //       await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     if (status !== "granted") {
+  //       Alert.alert(
+  //         "Permission Denied",
+  //         "Sorry, we need camera roll permission to upload images."
+  //       );
+  //       return;
+  //     }
 
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaType: "photo",
-        allowsEditing: true,
-        quality: 1,
-      });
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaType: "photo",
+  //       allowsEditing: true,
+  //       quality: 1,
+  //     });
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        setFile(result.assets[0]);
-        setError(null); // Clear any previous errors
-      } else {
-        setError("No image selected");
-      }
-    } catch (err) {
-      setError("An error occurred while selecting the image.");
-      console.error(err);
-    }
-  };
+  //     if (!result.canceled && result.assets && result.assets.length > 0) {
+  //       console.log(result);
+  //       setFile(result.assets[0]);
+  //       setError(null); // Clear any previous errors
+  //     } else {
+  //       setError("No image selected");
+  //     }
+  //   } catch (err) {
+  //     setError("An error occurred while selecting the image.");
+  //     console.error(err);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
@@ -138,10 +142,54 @@ export default function AddProduct({ navigation }) {
               value={form.title}
             />
           </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Description</Text>
+            <TextInput
+              clearButtonMode="while-editing"
+              onChangeText={(description) => setForm({ ...form, description })}
+              placeholder="Description"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.description}
+            />
+          </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Price (Nrs.)</Text>
+            <TextInput
+              clearButtonMode="while-editing"
+              onChangeText={(price) => setForm({ ...form, price })}
+              placeholder="000"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.price}
+            />
+          </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Category</Text>
+            <TextInput
+              clearButtonMode="while-editing"
+              onChangeText={(category) => setForm({ ...form, category })}
+              placeholder="Category"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.category}
+            />
+          </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Delivery Time (Days)</Text>
+            <TextInput
+              clearButtonMode="while-editing"
+              onChangeText={(deliveryTime) =>
+                setForm({ ...form, deliveryTime })
+              }
+              placeholder="deliveryTime"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              value={form.deliveryTime}
+            />
+          </View>
 
-          {/* Add other form fields here... */}
-
-          <View style={{ flex: 1 }}>
+          {/* <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>Upload Image</Text>
             {file && (
               <Image
@@ -150,7 +198,7 @@ export default function AddProduct({ navigation }) {
               />
             )}
             <Button title="Pick an Image" onPress={pickImage} />
-          </View>
+          </View> */}
 
           {/* Error Message */}
           {error && <Text style={styles.errorText}>{error}</Text>}
