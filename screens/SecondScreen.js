@@ -11,7 +11,8 @@ const SecondScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require("../assets/LOGO.png")} style={styles.image} />
-      <Text style= {styles.nepali}>- आत्मनिर्भरताको ज्योती - </Text>
+      <Text style={styles.nepaliText}>-----आत्मनिर्भरता को ज्योति-----</Text>
+      {/* Nepali Text */}
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Login");
@@ -35,13 +36,19 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 200, // Set the desired width
-    height: 200, // Set the desired height
+    height: 140, // Set the desired height
     resizeMode: "contain", // Adjust how the image scales
+  },
+  nepaliText: {
+    color: "#DC5440",
+    marginLeft: 33,
+    // alignSelf: "center",
   },
   button: {
     backgroundColor: "#DC5440",
     paddingVertical: 12,
     paddingHorizontal: 14,
+    marginTop: 50,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 12,
@@ -51,8 +58,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#fff",
   },
-  nepali: {
-    fontSize:18,
-    color:"#1d1d1d",
-  }
 });
