@@ -46,6 +46,10 @@ const Home = ({ navigation }) => {
     setCurrentIndex(index);
   };
 
+  const handleProductClick = (title, price, coverImage, description) => {
+    navigation.navigate("Product", { title, price, coverImage, description });
+    console.log(coverImage); // Pass data to Product screen
+  };  
   
   useEffect(() => {
     const fetchProducts = async () => {
@@ -193,9 +197,7 @@ const Home = ({ navigation }) => {
               products.map((product, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => {
-                    // handle onPress
-                  }}
+                  onPress={() => handleProductClick(product.title, product.price, product.coverImage, product.description)}
                 >
                   <View style={styles.card}>
                     <View style={styles.cardTop}>

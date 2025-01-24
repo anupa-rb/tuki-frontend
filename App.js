@@ -20,6 +20,7 @@ import AddProduct from "./screens/Seller/AddProduct";
 import MyProfile from "./screens/Seller/MyProfile";
 import ProductAdded from "./screens/Seller/ProductAdded";
 import SellerChat from "./screens/Seller/SellerChat";
+import Product from "./screens/Buyer/Product";
 
 const Stack = createNativeStackNavigator();
 
@@ -100,6 +101,11 @@ export default function App() {
       <Stack.Screen
           name="ProductAdded"
           component={ProductAdded}
+          options={{ headerShown: false }}
+        />
+              <Stack.Screen
+          name="Product"
+          component={Product}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
