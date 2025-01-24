@@ -17,7 +17,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-
 const data = [
   {
     id: "1",
@@ -37,7 +36,7 @@ const data = [
 
 const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-    const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const handleScroll = (event) => {
     const index = Math.round(
@@ -49,8 +48,8 @@ const Home = ({ navigation }) => {
   const handleProductClick = (title, price, coverImage, description) => {
     navigation.navigate("Product", { title, price, coverImage, description });
     console.log(coverImage); // Pass data to Product screen
-  };  
-  
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -156,23 +155,19 @@ const Home = ({ navigation }) => {
           }}
         >
           <Image
-            source={require("../../assets/Anupa.png")}
+            source={require("../../assets/duna_tapari.jpg")}
             style={styles.avatarXL}
           />
           <Image
-            source={require("../../assets/Anupa.png")}
+            source={require("../../assets/dhoop_batti.jpg")}
             style={styles.avatarXL}
           />
           <Image
-            source={require("../../assets/Anupa.png")}
+            source={require("../../assets/knitting.jpg")}
             style={styles.avatarXL}
           />
           <Image
-            source={require("../../assets/Anupa.png")}
-            style={styles.avatarXL}
-          />
-          <Image
-            source={require("../../assets/Anupa.png")}
+            source={require("../../assets/gundruk.jpg")}
             style={styles.avatarXL}
           />
         </ScrollView>
@@ -193,39 +188,44 @@ const Home = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
         >
-         {Array.isArray(products) && products.length > 0 ? (
-              products.map((product, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleProductClick(product.title, product.price, product.coverImage, product.description)}
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardTop}>
-                      <Image
-                        source={{uri: product.coverImage}}
-                        style={styles.cardImage}
-                      />
-                    </View>
-                    <View style={styles.cardFooter}>
-                      <View style={styles.cardBody}>
-                        <Text style={styles.cardTitle}>{product.title}</Text>
-                        <Text style={styles.cardSubtitle}>
-                          {product.price}
-                        </Text>
-                      </View>
-                      <AntDesign
-                        name="delete"
-                        size={24}
-                        color="red"
-                        onPress={() => handleDeleteProduct(product._id)}
-                      />
-                    </View>
+          {Array.isArray(products) && products.length > 0 ? (
+            products.map((product, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  handleProductClick(
+                    product.title,
+                    product.price,
+                    product.coverImage,
+                    product.description
+                  )
+                }
+              >
+                <View style={styles.card}>
+                  <View style={styles.cardTop}>
+                    <Image
+                      source={{ uri: product.coverImage }}
+                      style={styles.cardImage}
+                    />
                   </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>No products available</Text>
-            )}
+                  <View style={styles.cardFooter}>
+                    <View style={styles.cardBody}>
+                      <Text style={styles.cardTitle}>{product.title}</Text>
+                      <Text style={styles.cardSubtitle}>{product.price}</Text>
+                    </View>
+                    <AntDesign
+                      name="delete"
+                      size={24}
+                      color="red"
+                      onPress={() => handleDeleteProduct(product._id)}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text>No products available</Text>
+          )}
         </ScrollView>
       </ScrollView>
     </SafeAreaView>

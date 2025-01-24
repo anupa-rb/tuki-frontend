@@ -18,26 +18,19 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 const items = [
   {
-    icon: "figma",
-    label: "Senior UI/UX Designer",
-    company: "Figma",
-    jobType: "Full Time",
-    years: "2019-2023",
+
+    label: "Duna Tapari",
+    company: "Sita Thapa",
+    jobType: "",
+    years: "2025-01-01",
   },
   {
-    icon: "github",
-    label: "Mid-level Designer",
-    company: "GitHub",
-    jobType: "Full Time",
-    years: "2017-2019",
+    label: "Crochet",
+    company: "Rama Sapkota",
+    jobType: "",
+    years: "201",
   },
-  {
-    icon: "twitter",
-    label: "Junior Designer",
-    company: "Twitter",
-    jobType: "Full Time",
-    years: "2015-2017",
-  },
+
 ];
 const CARD_WIDTH = Math.min(Dimensions.get("screen").width * 0.75, 400);
 
@@ -112,8 +105,8 @@ export default function BuyerProfile({navigation}) {
             <Text style={styles.profileTitle}>{name}</Text>
 
             <Text style={styles.profileSubtitle}>
-              UI/UX Designer{" · "}
-              <Text style={{ color: "#fff" }}>@nickmiller</Text>
+              Buyer{" · "}
+              <Text style={{ color: "#fff" }}></Text>
             </Text>
           </View>
         </View>
@@ -142,7 +135,7 @@ export default function BuyerProfile({navigation}) {
         </View>
         <View style={styles.list}>
           <View style={styles.listHeader}>
-            <Text style={styles.listTitle}>My Experience</Text>
+            <Text style={styles.listTitle}>My Last Orders</Text>
 
             <TouchableOpacity
               onPress={() => {

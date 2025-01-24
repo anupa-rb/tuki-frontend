@@ -239,7 +239,7 @@ export default function MyProfile({ navigation }) {
                         name="delete"
                         size={24}
                         color="red"
-                        onPress={() => handleDeleteProduct(product._id)}
+                        onPress={() => handleDeleteProduct(index)}
                       />
                     </View>
                   </View>

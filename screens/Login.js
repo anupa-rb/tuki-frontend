@@ -99,7 +99,7 @@ export default function Login({ navigation }) {
               autoCorrect={false}
               clearButtonMode="while-editing"
               onChangeText={(password) => setForm({ ...form, password })}
-              placeholder="********"
+              placeholder="Password"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
