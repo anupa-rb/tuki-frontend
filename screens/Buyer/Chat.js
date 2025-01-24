@@ -15,7 +15,7 @@ import axios from "axios";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-const Message = () => {
+const BuyerChat = () => {
   const route = useRoute();
   const { conversationID } = route.params; // Get `conversationID` from route params
   const [messages, setMessages] = useState([]);
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Message;
+export default BuyerChat;
