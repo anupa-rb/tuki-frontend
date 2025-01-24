@@ -155,7 +155,7 @@ export default function MyProfile({ navigation }) {
         <View style={styles.profileTop}>
           <View style={styles.avatar}>
             <Image
-              source={require("../../assets/Anupa.png")}
+              source={require("../../assets/user.jpg")}
               style={styles.avatarImg}
             />
             <View style={styles.avatarNotification} />

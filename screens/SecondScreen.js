@@ -11,6 +11,7 @@ const SecondScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require("../assets/LOGO.png")} style={styles.image} />
+      <Text style= {styles.nepali}>- आत्मनिर्भरताको ज्योती - </Text>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Login");
@@ -50,4 +51,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#fff",
   },
+  nepali: {
+    fontSize:18,
+    color:"#1d1d1d",
+  }
 });
