@@ -86,7 +86,7 @@ export default function Login({ navigation }) {
               clearButtonMode="while-editing"
               keyboardType="phone"
               onChangeText={(phone) => setForm({ ...form, phone })}
-              placeholder="98xxxxxxxx"
+              placeholder="Mobile Number"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={form.phone}
