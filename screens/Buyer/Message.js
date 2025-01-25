@@ -99,7 +99,7 @@ export default function Message({ navigation }) {
           conversations
             .filter(({ buyerID, sellerID }) => {
               const participantName =
-                buyerID?.name || sellerID?.name || "Unnamed Participant";
+                buyerID?.name || sellerID?.name || "Unknown";
               return participantName
                 .toLowerCase()
                 .includes(input.trim().toLowerCase());
@@ -121,21 +121,19 @@ export default function Message({ navigation }) {
                       resizeMode="cover"
                       style={styles.cardImg}
                       source={{
-                        uri:
-                          participant?.image ||
-                          "https://your-default-avatar-url/noavatar.png",
+                        uri: participant?.image || "../../assets/user.jpg",
                       }}
                     />
 
                     <View>
                       <Text style={styles.cardTitle}>
-                        {participant?.name || "Unnamed"}
+                        {participant?.name || "Unknown"}
                       </Text>
                       <Text style={styles.cardMessage}>
                         {lastMessage || "No messages yet."}
                       </Text>
                       <Text style={styles.cardSubtitle}>
-                        Last updated: {new Date(updatedAt).toLocaleString()}
+                        {new Date(updatedAt).toLocaleTimeString()}
                       </Text>
                     </View>
 
