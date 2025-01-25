@@ -1,10 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Platform } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-//import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
 import BuyerTabNavigation from "./navigation/BuyerTabNavigation";
 import SellerTabNavigation from "./navigation/SellerTabNavigation";
 import FirstScreen from "./screens/FirstScreen";

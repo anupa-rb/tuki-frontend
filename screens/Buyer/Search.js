@@ -15,11 +15,12 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-const Search = () => {
+const Search = ({navigation}) => {
   const [gigs, setGigs] = useState([]);
   const [searchGigText, setSearchGigText] = useState("");
   const [searchErrorText, setSearchErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchTimer = setTimeout(() => {
@@ -35,6 +36,24 @@ const Search = () => {
 
     return () => clearTimeout(fetchTimer); // Cleanup timeout
   }, [searchGigText]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${API_URL}/gig/get`);
+        const data = await response.json();
+        console.log(data);
+        if (Array.isArray(data.data)) {
+          setProducts(data.data); // Update with the correct data
+        } else {
+          console.error("Data.products is not an array");
+        } // Populate the products list
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const fetchGigs = async () => {
     setLoading(true);
@@ -64,12 +83,22 @@ const Search = () => {
     }
   };
 
+  const handleProductClick = (title, price, coverImage, description) => {
+    navigation.navigate("Product", { title, price, coverImage, description });
+    console.log(coverImage); // Pass data to Product screen
+  };
+
   const renderGig = ({ item }) => (
     <View style={styles.gigCard}>
       <TouchableOpacity
-        onPress={() => {
-          // Handle gig press (e.g., navigate to details)
-        }}
+        onPress={() =>
+          handleProductClick(
+            item.title,
+            item.price,
+            item.coverImage,
+            item.description
+          )
+        }
       >
         <View style={styles.card}>
           <View style={styles.cardTop}>

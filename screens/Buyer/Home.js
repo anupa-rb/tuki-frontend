@@ -51,7 +51,6 @@ const Home = () => {
 
   const handleProductClick = (title, price, coverImage, description) => {
     navigation.navigate("Product", { title, price, coverImage, description });
-    console.log(coverImage); // Pass data to Product screen
   };
 
   useEffect(() => {
