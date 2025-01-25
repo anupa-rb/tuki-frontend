@@ -44,7 +44,7 @@ const reviews = [
   },
 ];
 
-export default function MyProfile({ navigation }) {
+export default function SellerProfile({ navigation }) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
   const [products, setProducts] = useState([]);

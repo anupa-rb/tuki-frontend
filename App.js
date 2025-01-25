@@ -13,11 +13,13 @@ import SNotification from "./screens/Seller/Notification";
 import Chat from "./screens/Buyer/Chat";
 import Message from "./screens/Buyer/Message";
 import AddProduct from "./screens/Seller/AddProduct";
-import MyProfile from "./screens/Seller/MyProfile";
+import SellerProfile from "./screens/Seller/SellerProfile";
+import BuyerProfile from "./screens/Buyer/MyProfile";
 import ProductAdded from "./screens/Seller/ProductAdded";
 import SellerChat from "./screens/Seller/SellerChat";
 import Product from "./screens/Buyer/Product";
 import Categories from "./screens/Buyer/Categories";
+import ViewAllItems from "./screens/Buyer/ViewAllItems";
 
 const Stack = createNativeStackNavigator();
 
@@ -91,8 +93,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="MyProfile"
-          component={MyProfile}
+          name="SellerProfile"
+          component={SellerProfile}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BuyerProfile"
+          component={BuyerProfile}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -108,6 +115,11 @@ export default function App() {
         <Stack.Screen
           name="Product"
           component={Product}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ViewAllItems"
+          component={ViewAllItems}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

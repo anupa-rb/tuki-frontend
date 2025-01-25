@@ -38,7 +38,7 @@ const data = [
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [sellerName, setSellerName] = useState([]);
 
   const navigation = useNavigation();
 
@@ -56,18 +56,44 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        // Step 1: Fetch the products data
         const response = await fetch(`${API_URL}/gig/get`);
         const data = await response.json();
-        console.log(data);
+
         if (Array.isArray(data.data)) {
-          setProducts(data.data); // Update with the correct data
+          // Step 2: Fetch seller data for each product
+          const productsWithSellers = await Promise.all(
+            data.data.map(async (product) => {
+              try {
+                const sellerResponse = await fetch(
+                  `${API_URL}/auth/get/${product.sellerId}`
+                );
+                const sellerData = await sellerResponse.json();
+
+                // Attach seller name to the product
+                return {
+                  ...product,
+                  sellerName: sellerData.data.name || "Unknown Seller",
+                };
+              } catch (error) {
+                console.error(
+                  `Failed to fetch seller for product ${product.id}`
+                );
+                return { ...product, sellerName: "Unknown Seller" };
+              }
+            })
+          );
+
+          // Update the state
+          setProducts(productsWithSellers);
         } else {
-          console.error("Data.products is not an array");
-        } // Populate the products list
+          console.error("Products data is not an array");
+        }
       } catch (error) {
         console.error("Failed to fetch products:", error);
       }
     };
+
     fetchProducts();
   }, []);
 
@@ -81,192 +107,200 @@ const Home = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.header}>
-        <Image source={require("../../assets/LOGO.png")} style={styles.image} />
-        <View style={styles.rightContainer}>
-          <TouchableOpacity
-            style={{ paddingHorizontal: 10, alignSelf: "center" }}
-            onPress={() => {
-              navigation.navigate("Notification");
-            }}
-          >
-            <FeatherIcon color="#6a99e3" name="bell" size={28} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("MyProfile");
-            }}
-          >
-            <Image
-              source={require("../../assets/user.jpg")}
-              style={styles.avatarMD}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={true}
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
-        <View>
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleScroll}
-            style={styles.carousel}
-            nestedScrollEnabled={true}
+      <ScrollView>
+        <View style={styles.header}>
+          <Image
+            source={require("../../assets/LOGO.png")}
+            style={styles.image}
           />
-          <View style={styles.pagination}>
-            {data.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  {
-                    backgroundColor:
-                      index === currentIndex ? "#0000ff" : "#cccccc",
-                  },
-                ]}
+          <View style={styles.rightContainer}>
+            <TouchableOpacity
+              style={{ paddingHorizontal: 10, alignSelf: "center" }}
+              onPress={() => {
+                navigation.navigate("Notification");
+              }}
+            >
+              <FeatherIcon color="#6a99e3" name="bell" size={28} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("MyProfile");
+              }}
+            >
+              <Image
+                source={require("../../assets/user.jpg")}
+                style={styles.avatarMD}
               />
-            ))}
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.listHeader}>
-          <Text style={styles.Title}>Categories</Text>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <Text style={styles.listAction}>View All</Text>
-          </TouchableOpacity>
-        </View>
         <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            flexDirection: "row",
-            paddingHorizontal: 18,
-            justifyContent: "space-around",
-            alignItems: "center",
-            paddingVertical: 10,
-          }}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories", { category: "dunatapari" });
-            }}
-          >
-            <Image
-              source={require("../../assets/duna_tapari.jpg")}
-              style={styles.avatarXL}
+          <View>
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              style={styles.carousel}
+              nestedScrollEnabled={true}
             />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories", { category: "clothing" });
-            }}
-          >
-            <Image
-              source={require("../../assets/knitting.jpg")}
-              style={styles.avatarXL}
-            />
-          </TouchableOpacity>{" "}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories", { category: "gundruk" });
-            }}
-          >
-            <Image
-              source={require("../../assets/gundruk.jpg")}
-              style={styles.avatarXL}
-            />
-          </TouchableOpacity>{" "}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories", { category: "handcraft" });
-            }}
-          >
-            <Image
-              source={require("../../assets/dhoop_batti.jpg")}
-              style={styles.avatarXL}
-            />
-          </TouchableOpacity>{" "}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories");
-            }}
-          >
-            <Image
-              source={require("../../assets/duna_tapari.jpg")}
-              style={styles.avatarXL}
-            />
-          </TouchableOpacity>{" "}
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Categories");
-            }}
-          >
-            <Image
-              source={require("../../assets/duna_tapari.jpg")}
-              style={styles.avatarXL}
-            />
-          </TouchableOpacity>
-        </ScrollView>
+            <View style={styles.pagination}>
+              {data.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor:
+                        index === currentIndex ? "#0000ff" : "#cccccc",
+                    },
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
 
-        <View style={styles.listHeader}>
-          <Text style={styles.Title}>New Items</Text>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
+          <View style={styles.listHeader}>
+            <Text style={styles.Title}>Categories</Text>
+            <TouchableOpacity
+              onPress={() => {
+                // handle onPress
+              }}
+            >
+              <Text style={styles.listAction}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              flexDirection: "row",
+              paddingHorizontal: 18,
+              justifyContent: "space-around",
+              alignItems: "center",
+              paddingVertical: 10,
             }}
           >
-            <Text style={styles.listAction}>View All</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories", { category: "dunatapari" });
+              }}
+            >
+              <Image
+                source={require("../../assets/duna_tapari.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories", { category: "clothing" });
+              }}
+            >
+              <Image
+                source={require("../../assets/knitting.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>{" "}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories", { category: "gundruk" });
+              }}
+            >
+              <Image
+                source={require("../../assets/gundruk.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>{" "}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories", { category: "handcraft" });
+              }}
+            >
+              <Image
+                source={require("../../assets/dhoop_batti.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>{" "}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories");
+              }}
+            >
+              <Image
+                source={require("../../assets/duna_tapari.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>{" "}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Categories");
+              }}
+            >
+              <Image
+                source={require("../../assets/duna_tapari.jpg")}
+                style={styles.avatarXL}
+              />
+            </TouchableOpacity>
+          </ScrollView>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
-        >
-          {Array.isArray(products) && products.length > 0 ? (
-            products.map((product, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() =>
-                  handleProductClick(
-                    product.title,
-                    product.price,
-                    product.coverImage,
-                    product.description
-                  )
-                }
-              >
-                <View style={styles.card}>
-                  <View style={styles.cardTop}>
-                    <Image
-                      source={{ uri: product.coverImage }}
-                      style={styles.cardImage}
-                    />
-                  </View>
-                  <View style={styles.cardFooter}>
-                    <View style={styles.cardBody}>
-                      <Text style={styles.cardTitle}>{product.title}</Text>
-                      <Text style={styles.cardSubtitle}>{product.price}</Text>
+          <View style={styles.listHeader}>
+            <Text style={styles.Title}>New Items</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ViewAllItems");
+              }}
+            >
+              <Text style={styles.listAction}>View All</Text>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.listContent}
+          >
+            {Array.isArray(products) && products.length > 0 ? (
+              products.map((product, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleProductClick(
+                      product.title,
+                      product.price,
+                      product.coverImage,
+                      product.description
+                    )
+                  }
+                >
+                  <View style={styles.card}>
+                    <View style={styles.cardTop}>
+                      <Image
+                        source={{ uri: product.coverImage }}
+                        style={styles.cardImage}
+                      />
+                    </View>
+                    <View style={styles.cardFooter}>
+                      <View style={styles.cardBody}>
+                        <Text style={styles.cardTitle}>{product.title}</Text>
+                        <Text style={styles.cardSubtitle}>
+                          {product.sellerName}
+                        </Text>
+                        <Text style={styles.cardSubtitle}>{product.price}</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <Text>No products available</Text>
-          )}
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text>No products available</Text>
+            )}
+          </ScrollView>
         </ScrollView>
       </ScrollView>
     </SafeAreaView>
