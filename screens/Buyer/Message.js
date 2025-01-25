@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -8,44 +8,45 @@ import {
   View,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-const lessons = [
-  {
-    img: "https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2404&q=80",
-    name: "Hari Prasad Guragai",
-    cal: 22,
-    duration: 10,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1597347316205-36f6c451902a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
-    name: "Rama Neupane",
-    cal: 12,
-    duration: 15,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
-    name: "Deepak Karki",
-    cal: 12,
-    duration: 5,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1598266663439-2056e6900339?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80",
-    name: "Anita Giri",
-    cal: 33,
-    duration: 12,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1632167764165-74a3d686e9f8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80",
-    name: "Rama Sapkota",
-    cal: 44,
-    duration: 10,
-  },
-];
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Update with your actual API URL
 
 export default function Message({ navigation }) {
   const [input, setInput] = useState("");
+  const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch conversations from the backend
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        console.log("Retrieved Token:", token);
+        const response = await axios.get(`${API_URL}/conversations`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Replace with your auth token logic
+          },
+        });
+
+        setConversations(response.data.data); // Assuming `data` contains the conversations array
+      } catch (err) {
+        Alert.alert(
+          "Error",
+          err.response?.data?.message || "Failed to load conversations"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConversations();
+  }, []);
+
   return (
     <SafeAreaView>
       <View style={styles.header}>
@@ -84,7 +85,7 @@ export default function Message({ navigation }) {
               autoCorrect={false}
               clearButtonMode="while-editing"
               onChangeText={(val) => setInput(val)}
-              placeholder="Start typing.."
+              placeholder="Type user name"
               placeholderTextColor="#848484"
               returnKeyType="done"
               style={styles.searchControl}
@@ -92,43 +93,64 @@ export default function Message({ navigation }) {
             />
           </View>
         </View>
-        {lessons.map(({ name, cal, duration, img }, index) => {
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                navigation.navigate("Chat", { name });
-              }}
-            >
-              <View style={styles.card}>
-                <Image
-                  alt=""
-                  resizeMode="cover"
-                  style={styles.cardImg}
-                  source={{ uri: img }}
-                />
+        {loading ? (
+          <Text style={styles.loadingText}>Loading conversations...</Text>
+        ) : (
+          conversations
+            .filter(({ buyerID, sellerID }) => {
+              const participantName =
+                buyerID?.name || sellerID?.name || "Unnamed Participant";
+              return participantName
+                .toLowerCase()
+                .includes(input.trim().toLowerCase());
+            })
+            .map(({ _id, buyerID, sellerID, lastMessage, updatedAt }) => {
+              const participant = buyerID || sellerID; // Depending on the logged-in user
+              return (
+                <TouchableOpacity
+                  key={_id}
+                  onPress={() => {
+                    navigation.navigate("Chat", {
+                      conversationID: _id,
+                    });
+                  }}
+                >
+                  <View style={styles.card}>
+                    <Image
+                      alt=""
+                      resizeMode="cover"
+                      style={styles.cardImg}
+                      source={{
+                        uri:
+                          participant?.image ||
+                          "https://your-default-avatar-url/noavatar.png",
+                      }}
+                    />
 
-                <View>
-                  <Text style={styles.cardTitle}>{name}</Text>
-
-                  <View style={styles.cardStats}>
-                    <View style={styles.cardStatsItem}>
-                      <FeatherIcon color="#636a73" name="clock" />
-
-                      <Text style={styles.cardStatsItemText}>
-                        {duration} mins
+                    <View>
+                      <Text style={styles.cardTitle}>
+                        {participant?.name || "Unnamed"}
+                      </Text>
+                      <Text style={styles.cardMessage}>
+                        {lastMessage || "No messages yet."}
+                      </Text>
+                      <Text style={styles.cardSubtitle}>
+                        Last updated: {new Date(updatedAt).toLocaleString()}
                       </Text>
                     </View>
-                  </View>
-                </View>
 
-                <View style={styles.cardAction}>
-                  <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+                    <View style={styles.cardAction}>
+                      <FeatherIcon
+                        color="#9ca3af"
+                        name="chevron-right"
+                        size={22}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -199,16 +221,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  searchContent: {
-    paddingLeft: 24,
-  },
-  searchEmpty: {
-    textAlign: "center",
-    paddingTop: 16,
-    fontWeight: "500",
-    fontSize: 15,
-    color: "#9ca1ac",
-  },
   /** Card */
   card: {
     paddingVertical: 14,
@@ -226,27 +238,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#000",
-    marginBottom: 8,
+    marginBottom: 4,
   },
-  cardStats: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+  cardMessage: {
+    fontSize: 14,
+    color: "#333",
+    marginBottom: 4,
   },
-  cardStatsItem: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 8,
-  },
-  cardStatsItemText: {
-    fontSize: 13,
-    fontWeight: "500",
+  cardSubtitle: {
+    fontSize: 12,
     color: "#636a73",
-    marginLeft: 2,
   },
   cardAction: {
     marginLeft: "auto",
+  },
+  loadingText: {
+    textAlign: "center",
+    color: "#666",
+    marginTop: 20,
   },
 });

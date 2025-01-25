@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,44 +7,41 @@ import {
   FlatList,
   StyleSheet,
   Image,
-  ScrollView,
+  ActivityIndicator,
   Alert,
 } from "react-native";
-import { useRoute } from "@react-navigation/native"; // For accessing params
+import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 
-const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
+const API_URL = "https://unique-burro-surely.ngrok-free.app/api";
 
 const BuyerChat = () => {
   const route = useRoute();
-  const { conversationID } = route.params; // Get `conversationID` from route params
+  const { conversationID } = route.params; // Access conversation ID from navigation
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch messages from the backend
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/messages/${conversationID}`
-        );
-        setMessages(response.data);
-      } catch (err) {
-        Alert.alert(
-          "Error",
-          err.response?.data?.message || "Failed to load messages"
-        );
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMessages();
+  // Fetch messages from backend
+  const fetchMessages = useCallback(async () => {
+    try {
+      const response = await axios.get(`${API_URL}/messages/${conversationID}`);
+      setMessages(response.data);
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        error.response?.data?.message || "Failed to fetch messages."
+      );
+    } finally {
+      setLoading(false);
+    }
   }, [conversationID]);
 
-  // Send a new message to the backend
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  // Send a new message
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -53,56 +50,50 @@ const BuyerChat = () => {
         conversationID,
         description: newMessage,
       });
-      // Refresh messages after sending
       setNewMessage("");
-      const response = await axios.get(`${API_URL}/messages/${conversationID}`);
-      setMessages(response.data);
-    } catch (err) {
+      fetchMessages(); // Refresh messages
+    } catch (error) {
       Alert.alert(
         "Error",
-        err.response?.data?.message || "Failed to send message"
+        error.response?.data?.message || "Failed to send message."
       );
     }
   };
 
+  const renderMessage = ({ item }) => {
+    const isOwner = item.userID._id === "userID"; // Replace with logged-in user's ID
+    return (
+      <View style={[styles.message, isOwner && styles.owner]}>
+        <Image
+          source={{
+            uri: item.userID.image || "https://example.com/no-avatar.png",
+          }}
+          style={styles.avatar}
+        />
+        <Text style={styles.messageText}>{item.description}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.messagesContainer}>
-        {loading ? (
-          <Text style={styles.loader}>Loading...</Text>
-        ) : error ? (
-          <Text style={styles.error}>Something went wrong</Text>
-        ) : (
-          <FlatList
-            data={messages}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <View
-                style={[
-                  styles.messageItem,
-                  item.userID._id === "userID" && styles.owner,
-                ]}
-              >
-                <Image
-                  source={{
-                    uri:
-                      item.userID.image ||
-                      "https://your-default-avatar-url/noavatar.png",
-                  }}
-                  style={styles.avatar}
-                />
-                <Text style={styles.messageText}>{item.description}</Text>
-              </View>
-            )}
-          />
-        )}
-      </ScrollView>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0078FF" style={styles.loader} />
+      ) : (
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item._id}
+          renderItem={renderMessage}
+          style={styles.messageList}
+          contentContainerStyle={{ padding: 10 }}
+        />
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={newMessage}
           onChangeText={setNewMessage}
-          placeholder="Write a message..."
+          placeholder="Type a message..."
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
@@ -114,17 +105,16 @@ const BuyerChat = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f5f5f5" },
-  messagesContainer: { padding: 10 },
-  loader: { textAlign: "center", marginTop: 20 },
-  error: { color: "red", textAlign: "center", marginTop: 20 },
-  messageItem: {
+  loader: { marginTop: 20 },
+  messageList: { flex: 1 },
+  message: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 5,
-    backgroundColor: "#eaeaea",
-    borderRadius: 8,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 10,
     padding: 10,
-    maxWidth: "80%",
+    marginBottom: 10,
+    maxWidth: "75%",
   },
   owner: {
     alignSelf: "flex-end",
@@ -136,32 +126,29 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  messageText: { fontSize: 16, color: "#333" },
+  messageText: { color: "#333", fontSize: 16 },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: "#ccc",
+    borderColor: "#ddd",
     padding: 10,
+    backgroundColor: "#fff",
   },
   input: {
     flex: 1,
-    backgroundColor: "#fff",
+    padding: 10,
     borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    backgroundColor: "#f0f0f0",
     marginRight: 10,
   },
   sendButton: {
     backgroundColor: "#0078FF",
-    borderRadius: 20,
-    paddingVertical: 10,
     paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
   },
-  sendButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
+  sendButtonText: { color: "#fff", fontWeight: "bold" },
 });
 
 export default BuyerChat;
