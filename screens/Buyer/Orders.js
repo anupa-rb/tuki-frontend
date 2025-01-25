@@ -10,47 +10,43 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const Orders = ({navigation}) => {
+const Orders = ({ navigation }) => {
   return (
     <SafeAreaView>
-        <View style={styles.header}>
-          <Image
-            source={require("../../assets/LOGO.png")}
-            style={styles.logo}
-          />
-          <View style={styles.rightContainer}>
-            <TouchableOpacity
-              style={{ paddingHorizontal: 10, alignSelf: "center" }}
-              onPress={() => {
-                navigation.navigate("Notification");
-              }}
-            >
-              <FeatherIcon color="#6a99e3" name="bell" size={28} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("BuyerProfile");
-              }}
-            >
-              <Image
-                source={require("../../assets/user.jpg")}
-                style={styles.avatarMD}
-              />
-            </TouchableOpacity>
-          </View>
-          </View>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>Manage Orders</Text>
-          <Text>No Orders</Text>
-        </ScrollView>
-      
+      <View style={styles.header}>
+        <Image source={require("../../assets/LOGO.png")} style={styles.logo} />
+        <View style={styles.rightContainer}>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 10, alignSelf: "center" }}
+            onPress={() => {
+              navigation.navigate("Notification");
+            }}
+          >
+            <FeatherIcon color="#6a99e3" name="bell" size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("MyProfile");
+            }}
+          >
+            <Image
+              source={require("../../assets/user.jpg")}
+              style={styles.avatarMD}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Manage Orders</Text>
+        <Text>No Orders</Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal:20,
+    paddingHorizontal: 20,
     justifyContent: "space-around",
   },
   header: {

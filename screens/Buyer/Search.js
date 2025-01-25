@@ -45,7 +45,7 @@ const Search = () => {
         `${API_URL}/gig/search?search=${encodeURIComponent(searchGigText)}`
       );
       const data = await response.json();
-      console.log("API Response Data:", data);  // Add this log to inspect the response
+      console.log("API Response Data:", data); // Add this log to inspect the response
 
       if (response.ok) {
         if (data && data.gigs && Array.isArray(data.gigs)) {
@@ -91,56 +91,60 @@ const Search = () => {
 
   return (
     <SafeAreaView>
-            <View style={styles.header}>
-              <Image source={require("../../assets/LOGO.png")} style={styles.logo} />
-              <View style={styles.rightContainer}>
-                <TouchableOpacity
-                  style={{ paddingHorizontal: 10, alignSelf: "center" }}
-                  onPress={() => {
-                    navigation.navigate("Notification");
-                  }}
-                >
-                  <FeatherIcon color="#6a99e3" name="bell" size={28} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("BuyerProfile");
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/Anupa.png")}
-                    style={styles.avatarMD}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-        <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={require("../../assets/LOGO.png")} style={styles.logo} />
+        <View style={styles.rightContainer}>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 10, alignSelf: "center" }}
+            onPress={() => {
+              navigation.navigate("Notification");
+            }}
+          >
+            <FeatherIcon color="#6a99e3" name="bell" size={28} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("MyProfile");
+            }}
+          >
+            <Image
+              source={require("../../assets/Anupa.png")}
+              style={styles.avatarMD}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.container}>
         <Text style={styles.title}>Product Search</Text>
-         <View style={styles.searchWrapper}>
-                  <View style={styles.search}>
-                    <View style={styles.searchIcon}>
-                      <FeatherIcon color="#848484" name="search" size={17} />
-                    </View>
-        
-                    <TextInput
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      clearButtonMode="while-editing"
-                      placeholderTextColor="#848484"
-                      returnKeyType="done"
-                      style={styles.searchControl}
-                      placeholder="Type product title or category"
-                      value={searchGigText}
-                      onChangeText={(text) => setSearchGigText(text)}
-                    />
-                  </View>
-                </View>
+        <View style={styles.searchWrapper}>
+          <View style={styles.search}>
+            <View style={styles.searchIcon}>
+              <FeatherIcon color="#848484" name="search" size={17} />
+            </View>
+
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              placeholderTextColor="#848484"
+              returnKeyType="done"
+              style={styles.searchControl}
+              placeholder="Type product title or category"
+              value={searchGigText}
+              onChangeText={(text) => setSearchGigText(text)}
+            />
+          </View>
+        </View>
         {searchErrorText ? (
           <Text style={styles.errorText}>{searchErrorText}</Text>
         ) : null}
 
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            style={styles.loader}
+          />
         ) : gigs.length < 1 ? (
           <Text></Text>
         ) : (
@@ -150,7 +154,7 @@ const Search = () => {
             keyExtractor={(item) => item._id.toString()}
           />
         )}
-        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -166,29 +170,29 @@ const styles = StyleSheet.create({
     color: "#1d1d1d",
     marginBottom: 12,
   },
-    /** Header */
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 15,
-    },
-    rightContainer: {
-      flexDirection: "row",
-      alignItems: "flex-start",
-    },
-    avatarMD: {
-      width: 50,
-      height: 50,
-      borderRadius: 9999,
-    },
-    logo: {
-      width: 100,
-      height: 100,
-      resizeMode: "contain",
-      alignSelf: "center",
-    },
-    /** Search */
+  /** Header */
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  rightContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  avatarMD: {
+    width: 50,
+    height: 50,
+    borderRadius: 9999,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+  /** Search */
   search: {
     position: "relative",
     backgroundColor: "#fff",

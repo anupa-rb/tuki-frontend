@@ -16,6 +16,26 @@ import axios from "axios";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Update with your actual API URL
 
+const getTimeDisplay = (updatedAt) => {
+  const now = new Date();
+  const updatedTime = new Date(updatedAt);
+  const diffInMinutes = Math.floor((now - updatedTime) / 60000);
+
+  if (diffInMinutes === 0) {
+    return "now";
+  } else if (diffInMinutes > 0 && diffInMinutes <= 5) {
+    return `${diffInMinutes} min ago`;
+  } else {
+    return updatedTime
+      .toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .toUpperCase();
+  }
+};
+
 export default function Message({ navigation }) {
   const [input, setInput] = useState("");
   const [conversations, setConversations] = useState([]);
@@ -62,7 +82,7 @@ export default function Message({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("BuyerProfile");
+              navigation.navigate("MyProfile");
             }}
           >
             <Image
@@ -104,50 +124,59 @@ export default function Message({ navigation }) {
                 .toLowerCase()
                 .includes(input.trim().toLowerCase());
             })
-            .map(({ _id, buyerID, sellerID, lastMessage, updatedAt }) => {
-              const participant = buyerID || sellerID; // Depending on the logged-in user
-              return (
-                <TouchableOpacity
-                  key={_id}
-                  onPress={() => {
-                    navigation.navigate("Chat", {
-                      conversationID: _id,
-                    });
-                  }}
-                >
-                  <View style={styles.card}>
-                    <Image
-                      alt=""
-                      resizeMode="cover"
-                      style={styles.cardImg}
-                      source={{
-                        uri: participant?.image || "../../assets/user.jpg",
-                      }}
-                    />
-
-                    <View>
-                      <Text style={styles.cardTitle}>
-                        {participant?.name || "Unknown"}
-                      </Text>
-                      <Text style={styles.cardMessage}>
-                        {lastMessage || "No messages yet."}
-                      </Text>
-                      <Text style={styles.cardSubtitle}>
-                        {new Date(updatedAt).toLocaleTimeString()}
-                      </Text>
-                    </View>
-
-                    <View style={styles.cardAction}>
-                      <FeatherIcon
-                        color="#9ca3af"
-                        name="chevron-right"
-                        size={22}
+            .map(
+              ({
+                _id,
+                conversationID,
+                buyerID,
+                sellerID,
+                lastMessage,
+                updatedAt,
+              }) => {
+                const participant = buyerID; // Depending on the logged-in user
+                return (
+                  <TouchableOpacity
+                    key={conversationID}
+                    onPress={() => {
+                      navigation.navigate("SellerChat", {
+                        conversationID,
+                      });
+                    }}
+                  >
+                    <View style={styles.card}>
+                      <Image
+                        alt=""
+                        resizeMode="cover"
+                        style={styles.cardImg}
+                        source={{
+                          uri: participant?.image || "../../assets/user.jpg",
+                        }}
                       />
+
+                      <View>
+                        <Text style={styles.cardTitle}>
+                          {participant?.name || "Unknown"}
+                        </Text>
+                        <Text style={styles.cardMessage}>
+                          {lastMessage || "No messages yet."}
+                        </Text>
+                        <Text style={styles.cardSubtitle}>
+                          {getTimeDisplay(updatedAt)}
+                        </Text>
+                      </View>
+
+                      <View style={styles.cardAction}>
+                        <FeatherIcon
+                          color="#9ca3af"
+                          name="chevron-right"
+                          size={22}
+                        />
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })
+                  </TouchableOpacity>
+                );
+              }
+            )
         )}
       </ScrollView>
     </SafeAreaView>
