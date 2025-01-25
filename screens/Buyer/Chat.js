@@ -24,7 +24,7 @@ export default function Chat({ route, navigation }) {
   const [currentUserID, setCurrentUserID] = useState(null);
   const [currentUserName, setCurrentUserName] = useState("");
 
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef(); // Create a ref for ScrollView
 
   useEffect(() => {
     const fetchCurrentUserID = async () => {
@@ -67,9 +67,14 @@ export default function Chat({ route, navigation }) {
     };
 
     fetchMessages();
-    const interval = setInterval(fetchMessages, 200);
-    return () => clearInterval(interval);
   }, [conversationID]);
+
+  useEffect(() => {
+    // Scroll to the bottom when messages are loaded or updated
+    if (!loading && scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: false });
+    }
+  }, [messages, loading]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
@@ -122,12 +127,6 @@ export default function Chat({ route, navigation }) {
     }
   };
 
-  useEffect(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: false });
-    }
-  }, [messages]);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -138,7 +137,7 @@ export default function Chat({ route, navigation }) {
       </View>
       <ScrollView
         contentContainerStyle={styles.messagesContainer}
-        ref={scrollViewRef} // Attach the ref to ScrollView
+        ref={scrollViewRef}
       >
         {loading ? (
           <Text style={styles.loadingText}>Loading messages...</Text>

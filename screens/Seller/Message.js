@@ -65,8 +65,6 @@ export default function Message({ navigation }) {
     };
 
     fetchConversations();
-    const interval = setInterval(fetchConversations, 200);
-    return () => clearInterval(interval);
   }, []);
 
   return (
