@@ -167,7 +167,7 @@ const Home = ({ navigation }) => {
             style={styles.avatarXL}
           />
           <Image
-            source={require("../../assets/gundruk.jpg")}
+            source={require("../../assets/duna_tapari.jpg")}
             style={styles.avatarXL}
           />
         </ScrollView>
@@ -213,12 +213,6 @@ const Home = ({ navigation }) => {
                       <Text style={styles.cardTitle}>{product.title}</Text>
                       <Text style={styles.cardSubtitle}>{product.price}</Text>
                     </View>
-                    <AntDesign
-                      name="delete"
-                      size={24}
-                      color="red"
-                      onPress={() => handleDeleteProduct(product._id)}
-                    />
                   </View>
                 </View>
               </TouchableOpacity>

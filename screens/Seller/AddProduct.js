@@ -26,6 +26,7 @@ export default function AddProduct({ navigation }) {
     deliveryTime: "",
   });
 
+  const [image, setImage] = useState();
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
 
@@ -100,7 +101,7 @@ export default function AddProduct({ navigation }) {
 
   //     if (!result.canceled && result.assets && result.assets.length > 0) {
   //       console.log(result);
-  //       setFile(result.assets[0]);
+  //       setFile(result.assets[0].uri);
   //       setError(null); // Clear any previous errors
   //     } else {
   //       setError("No image selected");
