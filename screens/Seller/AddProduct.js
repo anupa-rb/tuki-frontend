@@ -114,9 +114,7 @@ export default function AddProduct({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
-      <KeyboardAwareScrollView style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerBack}>
+                <View style={styles.headerBack}>
             <FeatherIcon
               color="#1D2A32"
               name="chevron-left"
@@ -126,6 +124,9 @@ export default function AddProduct({ navigation }) {
               }}
             />
           </View>
+      <KeyboardAwareScrollView style={styles.container}>
+        <View style={styles.header}>
+
 
           <Text style={styles.title}>Add a New Service</Text>
         </View>
@@ -219,6 +220,7 @@ export default function AddProduct({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    paddingHorizontal:20,
     paddingVertical: 24,
     flexGrow: 1,
     flexShrink: 1,
@@ -269,4 +271,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#fff",
   },
+  headerBack: {
+    paddingHorizontal:5,
+    marginBottom:-15,
+    marginTop:5,
+  }
 });
