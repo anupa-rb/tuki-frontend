@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -34,9 +35,12 @@ const data = [
   },
 ];
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState([]);
+
+  const navigation = useNavigation();
 
   const handleScroll = (event) => {
     const index = Math.round(
@@ -154,22 +158,66 @@ const Home = ({ navigation }) => {
             paddingVertical: 10,
           }}
         >
-          <Image
-            source={require("../../assets/duna_tapari.jpg")}
-            style={styles.avatarXL}
-          />
-          <Image
-            source={require("../../assets/dhoop_batti.jpg")}
-            style={styles.avatarXL}
-          />
-          <Image
-            source={require("../../assets/knitting.jpg")}
-            style={styles.avatarXL}
-          />
-          <Image
-            source={require("../../assets/duna_tapari.jpg")}
-            style={styles.avatarXL}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories", { category: "dunatapari" });
+            }}
+          >
+            <Image
+              source={require("../../assets/duna_tapari.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories", { category: "clothing" });
+            }}
+          >
+            <Image
+              source={require("../../assets/knitting.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>{" "}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories", { category: "gundruk" });
+            }}
+          >
+            <Image
+              source={require("../../assets/gundruk.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>{" "}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories", { category: "handcraft" });
+            }}
+          >
+            <Image
+              source={require("../../assets/dhoop_batti.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>{" "}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories");
+            }}
+          >
+            <Image
+              source={require("../../assets/duna_tapari.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>{" "}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Categories");
+            }}
+          >
+            <Image
+              source={require("../../assets/duna_tapari.jpg")}
+              style={styles.avatarXL}
+            />
+          </TouchableOpacity>
         </ScrollView>
 
         <View style={styles.listHeader}>
