@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Button } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import React from "react";
 import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +16,9 @@ const Product = ({ navigation }) => {
   const route = useRoute();
   const { title, price, coverImage, description } = route.params;
 
-const handleChat = () => {
-navigation.navigate("Chat", {conversationID: 1});
-}
+  const handleChat = () => {
+    navigation.navigate("Chat", { conversationID: 1 });
+  };
 
   return (
     <SafeAreaView>
@@ -28,7 +35,7 @@ navigation.navigate("Chat", {conversationID: 1});
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("BuyerProfile");
+              navigation.navigate("MyProfile");
             }}
           >
             <Image
@@ -47,12 +54,11 @@ navigation.navigate("Chat", {conversationID: 1});
         <Text style={styles.cardTitle}>{title}</Text>
         <Text style={styles.cardSubtitle}>Rs.{price}</Text>
         <Text style={styles.cardDesc}>{description}</Text>
-        <Button title="Chat with Seller" onPress={handleChat}/>
+        <Button title="Chat with Seller" onPress={handleChat} />
       </View>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

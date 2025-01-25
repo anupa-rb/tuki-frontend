@@ -66,7 +66,7 @@ export default function SellerHome({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("BuyerProfile");
+              navigation.navigate("MyProfile");
             }}
           >
             <Image
