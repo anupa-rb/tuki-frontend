@@ -45,7 +45,7 @@ export default function App() {
           component={BuyerTabNavigation}
           options={{ headerShown: false }}
         />
-                <Stack.Screen
+        <Stack.Screen
           name="Seller Navigation"
           component={SellerTabNavigation}
           options={{ headerShown: false }}
@@ -65,61 +65,61 @@ export default function App() {
           component={ChooseRole}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="BNotification"
           component={BNotification}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="SNotification"
           component={SNotification}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="Message"
           component={Message}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="Chat"
           component={Chat}
           options={{ headerShown: false }}
         />
-                  <Stack.Screen
+        <Stack.Screen
           name="SellerChat"
           component={SellerChat}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="AddProduct"
           component={AddProduct}
           options={{ headerShown: false }}
         />
-                  <Stack.Screen
+        <Stack.Screen
           name="MyProfile"
           component={MyProfile}
           options={{ headerShown: false }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="ProductAdded"
           component={ProductAdded}
           options={{ headerShown: false }}
         />
-              <Stack.Screen
+        <Stack.Screen
           name="Categories"
           component={Categories}
           options={{ headerShown: false }}
         />
-              <Stack.Screen
+        <Stack.Screen
           name="Product"
           component={Product}
           options={{ headerShown: false }}
         />
-                      <Stack.Screen
+        {/* <Stack.Screen
           name="DeleteConfirm"
           component={DeleteConfirm}
           options={{ headerShown: false }}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
