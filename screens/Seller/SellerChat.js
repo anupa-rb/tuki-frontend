@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     borderBottomWidth: 1,
+    marginTop:15,
     borderColor: "#efefef",
   },
   headerTitle: {

@@ -4,25 +4,25 @@
     "slug": "tuki",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/LOGO.png",
+    "icon": "./assets/splashscreen.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/LOGO.png",
+      "image": "./assets/splashscreen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#DC5440"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/LOGO.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/splashscreen.png",
+        "backgroundColor": "#DC5440"
       }
     },
     "web": {
-      "favicon": "./assets/LOGO.png"
+      "favicon": "./assets/splashscreen.png"
     }
   }
 }

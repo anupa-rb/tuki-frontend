@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   Switch,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CommonActions } from "@react-navigation/native";
@@ -111,10 +112,24 @@ export default function MyProfile({ navigation }) {
     });
   };
 
-  const handleDeleteProduct = async (productId) => {
+  const showDeleteAlert = (productId) => {
+    Alert.alert(
+      "Delete Confirmation",
+      "Are you sure you want to delete this product?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Yes, Delete", onPress: () => handleDeleteYes(productId) },
+      ]
+    );
+  };
+
+  const handleDeleteYes = async (productId) => {
     try {
-      const token = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/gigs/${productId}`, {
+      const token = await AsyncStorage.getItem("accessToken");
+      console.log("Token:", token);
+      console.log("API URL:", `${API_URL}/gig/delete/${productId}`);
+
+      const response = await fetch(`${API_URL}/gig/delete/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -122,20 +137,21 @@ export default function MyProfile({ navigation }) {
         },
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(result.message || "Failed to delete the product.");
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      setProducts((prev) =>
-        prev.filter((product) => product._id !== productId)
-      );
-      alert("Product deleted successfully.");
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        console.log("Product deleted:", data);
+      } else {
+        console.log("Product deleted successfully, but no JSON response.");
+      }
     } catch (error) {
       console.error("Failed to delete product:", error);
-      alert(`Error: ${error.message}`);
     }
+    navigation.navigate("Seller Navigation");
   };
 
   return (
@@ -224,22 +240,20 @@ export default function MyProfile({ navigation }) {
                   <View style={styles.card}>
                     <View style={styles.cardTop}>
                       <Image
-                        source={{uri: product.coverImage}}
+                        source={{ uri: product.coverImage }}
                         style={styles.cardImage}
                       />
                     </View>
                     <View style={styles.cardFooter}>
                       <View style={styles.cardBody}>
                         <Text style={styles.cardTitle}>{product.title}</Text>
-                        <Text style={styles.cardSubtitle}>
-                          {product.price}
-                        </Text>
+                        <Text style={styles.cardSubtitle}>{product.price}</Text>
                       </View>
                       <AntDesign
                         name="delete"
                         size={24}
                         color="red"
-                        onPress={() => handleDeleteProduct(index)}
+                        onPress={() => showDeleteAlert(product._id)}
                       />
                     </View>
                   </View>

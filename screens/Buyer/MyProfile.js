@@ -18,17 +18,18 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 const items = [
   {
-
+    icon: require("../../assets/duna_tapari.jpg"),
     label: "Duna Tapari",
     company: "Sita Thapa",
     jobType: "",
     years: "2025-01-01",
   },
   {
-    label: "Crochet",
+    icon:require("../../assets/knitting.jpg"),
+    label: "Knitting",
     company: "Rama Sapkota",
     jobType: "",
-    years: "201",
+    years: "2024-12-15",
   },
 
 ];
@@ -161,12 +162,10 @@ export default function BuyerProfile({navigation}) {
                 <View style={styles.card}>
                   <View style={styles.cardTop}>
                     <View style={styles.cardIcon}>
-                      <FeatherIcon color="#000" name={icon} size={24} />
+                    <Image source={icon} style={styles.avatarImg} />
                     </View>
-
                     <View style={styles.cardBody}>
                       <Text style={styles.cardTitle}>{label}</Text>
-
                       <Text style={styles.cardSubtitle}>{company}</Text>
                     </View>
                   </View>
@@ -210,9 +209,8 @@ export default function BuyerProfile({navigation}) {
                 <View style={styles.card}>
                   <View style={styles.cardTop}>
                     <View style={styles.cardIcon}>
-                      <FeatherIcon color="#000" name={icon} size={24} />
-                    </View>
-
+                    <Image source={icon} style={styles.avatarImg} />
+                    </View>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
                     <View style={styles.cardBody}>
                       <Text style={styles.cardTitle}>{label}</Text>
 

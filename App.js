@@ -22,7 +22,6 @@ import ProductAdded from "./screens/Seller/ProductAdded";
 import SellerChat from "./screens/Seller/SellerChat";
 import Product from "./screens/Buyer/Product";
 import Categories from "./screens/Buyer/Categories";
-import DeleteConfirm from "./screens/Seller/DeleteConfirm";
 
 const Stack = createNativeStackNavigator();
 
@@ -115,11 +114,6 @@ export default function App() {
           component={Product}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="DeleteConfirm"
-          component={DeleteConfirm}
-          options={{ headerShown: false }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
