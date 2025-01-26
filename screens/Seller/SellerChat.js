@@ -122,7 +122,7 @@ export default function Chat({ route, navigation }) {
 
   useEffect(() => {
     if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: false });
+      scrollViewRef.current.scrollToEnd({ animated: false }); // Ensure the ScrollView always scrolls to the bottom
     }
   }, [messages]);
 
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     borderBottomWidth: 1,
-    marginTop:15,
+    marginTop: 15,
     borderColor: "#efefef",
   },
   headerTitle: {

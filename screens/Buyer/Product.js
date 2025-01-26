@@ -11,13 +11,38 @@ import { useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Product = ({ navigation }) => {
   const route = useRoute();
-  const { title, price, coverImage, description, productId } = route.params;
+  const { title, price, coverImage, description, productId, sellerId } = route.params;
+  // console.log(route.params);
 
-  const handleChat = () => {
-    navigation.navigate("Chat", { conversationID: 1 });
+  const API_URL = "https://unique-burro-surely.ngrok-free.app/api";
+
+  const handleChat = async () => {
+    try {
+      console.log(sellerId);
+      const token = await AsyncStorage.getItem("accessToken");
+      const res = await fetch(`${API_URL}/conversations`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: sellerId,
+        }),
+      });
+
+      const data = await res.json();
+      const conversationID = data.data.conversationID;
+      console.log(conversationID);
+
+      navigation.navigate("Chat", { conversationID });
+    } catch (err) {
+      console.error("Error starting your chat: ", err);
+    }
   };
 
   const handlePlaceOrder = () => {
