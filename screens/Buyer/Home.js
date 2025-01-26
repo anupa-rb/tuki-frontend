@@ -35,11 +35,10 @@ const data = [
   },
 ];
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [sellerName, setSellerName] = useState([]);
-
 
   const handleScroll = (event) => {
     const index = Math.round(
@@ -53,15 +52,17 @@ const Home = ({navigation}) => {
     price,
     coverImage,
     description,
-    sellerId
-  , productId) => {
+    sellerId,
+    productId
+  ) => {
     navigation.navigate("Product", {
       title,
       price,
       coverImage,
       description,
       sellerId,
-   , productId });
+      productId,
+    });
   };
 
   useEffect(() => {
@@ -280,7 +281,7 @@ const Home = ({navigation}) => {
                       product.coverImage,
                       product.description,
                       product.sellerId,
-                      product._id,
+                      product._id
                     )
                   }
                 >

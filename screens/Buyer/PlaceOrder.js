@@ -82,17 +82,6 @@ export default function PlaceOrder({ navigation }) {
           </View>
         </View>
       </KeyboardAwareScrollView>
-
-      <TouchableOpacity
-        onPress={() => {
-          // handle link
-        }}
-      >
-        <Text style={styles.formFooter}>
-          Already have an account?{" "}
-          <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
-        </Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }

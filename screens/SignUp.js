@@ -199,9 +199,7 @@ export default function SignUp({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAwareScrollView>
-
-      <TouchableOpacity
+        <TouchableOpacity
         onPress={() => {
           navigation.navigate("Login");
         }}
@@ -211,6 +209,7 @@ export default function SignUp({ navigation }) {
           <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
         </Text>
       </TouchableOpacity>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
