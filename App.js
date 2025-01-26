@@ -21,6 +21,7 @@ import Product from "./screens/Buyer/Product";
 import Categories from "./screens/Buyer/Categories";
 import ViewAllItems from "./screens/Buyer/ViewAllItems";
 import PlaceOrder from "./screens/Buyer/PlaceOrder";
+import PlaceOrderConfirm from "./screens/Buyer/PlaceOrderConfirm";
 
 const Stack = createNativeStackNavigator();
 
@@ -126,6 +127,11 @@ export default function App() {
                 <Stack.Screen
           name="PlaceOrder"
           component={PlaceOrder}
+          options={{ headerShown: false }}
+        />
+                        <Stack.Screen
+          name="PlaceOrderConfirm"
+          component={PlaceOrderConfirm}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

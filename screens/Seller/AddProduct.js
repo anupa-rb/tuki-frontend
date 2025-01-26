@@ -10,7 +10,7 @@ import {
   Button,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { MultiSelect } from "react-native-element-dropdown";
+// import { MultiSelect } from "react-native-element-dropdown";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";

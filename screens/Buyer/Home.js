@@ -231,27 +231,8 @@ const Home = ({ navigation }) => {
                 source={require("../../assets/dhoop_batti.jpg")}
                 style={styles.avatarXL}
               />
-            </TouchableOpacity>{" "}
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Categories");
-              }}
-            >
-              <Image
-                source={require("../../assets/duna_tapari.jpg")}
-                style={styles.avatarXL}
-              />
-            </TouchableOpacity>{" "}
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Categories");
-              }}
-            >
-              <Image
-                source={require("../../assets/duna_tapari.jpg")}
-                style={styles.avatarXL}
-              />
             </TouchableOpacity>
+
           </ScrollView>
 
           <View style={styles.listHeader}>
@@ -298,7 +279,7 @@ const Home = ({ navigation }) => {
                         <Text style={styles.cardSubtitle}>
                           {product.sellerName}
                         </Text>
-                        <Text style={styles.cardSubtitle}>{product.price}</Text>
+                        <Text style={styles.cardPrice}>Rs.{product.price}</Text>
                       </View>
                     </View>
                   </View>
@@ -329,6 +310,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 15,
+    marginTop:7,
   },
   rightContainer: {
     flexDirection: "row",
@@ -522,5 +504,10 @@ const styles = StyleSheet.create({
     width: 180,
     height: 150,
     borderRadius: 12,
+  },
+  cardPrice: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#28a745", // Green for price to highlight it
   },
 });

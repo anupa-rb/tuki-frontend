@@ -120,7 +120,7 @@ const ViewAllItems = ({ navigation }) => {
                         <Text style={styles.cardSubtitle}>
                           {product.sellerName}
                         </Text>
-                        <Text style={styles.cardPrice}>{product.price}</Text>
+                        <Text style={styles.cardPrice}>Rs.{product.price}</Text>
                       </View>
                     </View>
                   </View>

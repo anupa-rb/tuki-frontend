@@ -15,7 +15,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Product = ({ navigation }) => {
   const route = useRoute();
-  const { title, price, coverImage, description, productId, sellerId } = route.params;
+  const { title, price, coverImage, description, productId, sellerId } =
+    route.params;
   // console.log(route.params);
 
   const API_URL = "https://unique-burro-surely.ngrok-free.app/api";
@@ -46,7 +47,13 @@ const Product = ({ navigation }) => {
   };
 
   const handlePlaceOrder = () => {
-    navigation.navigate("PlaceOrder", { title, price, coverImage, description, productId });
+    navigation.navigate("PlaceOrder", {
+      title,
+      price,
+      coverImage,
+      description,
+      productId,
+    });
   };
 
   return (
@@ -81,11 +88,14 @@ const Product = ({ navigation }) => {
           </View>
         </View>
         <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardSubtitle}>Rs.{price}</Text>
+        <Text style={styles.cardPrice}>Rs.{price}</Text>
         <Text style={styles.cardDesc}>{description}</Text>
-        <Button title="Chat with Seller" onPress={handleChat} />
-        <Button title="Place an Order" onPress={handlePlaceOrder} />
-
+        <TouchableOpacity style={styles.btn} onPress={handleChat}>
+          <Text style={styles.btnText}>Chat with Seller</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.orderbtn} onPress={handlePlaceOrder}>
+          <Text style={styles.btnText}>Place an Order</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -143,6 +153,41 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#778599",
     marginBottom: 40,
+  },
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    backgroundColor: "#DC5440",
+    borderColor: "#DC5440",
+    marginBottom: 10,
+  },
+  orderbtn:{
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    backgroundColor: "#28a745",
+    borderColor: "#28a745",
+    marginBottom: 10,
+  },
+  btnText: {
+    fontSize: 17,
+    lineHeight: 24,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  cardPrice: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#28a745", // Green for price to highlight it
   },
 });
 

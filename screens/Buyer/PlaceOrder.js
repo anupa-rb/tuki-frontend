@@ -17,10 +17,12 @@ export default function PlaceOrder({ navigation }) {
   const route = useRoute();
   const { title, price, coverImage, description, productId } = route.params;
   const [form, setForm] = useState({
-    quantity:"",
+    quantity: "",
     description: "",
-
   });
+  const handleSubmitOrder = () => {
+    navigation.navigate("PlaceOrderConfirm");
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
       <KeyboardAwareScrollView>
@@ -52,15 +54,15 @@ export default function PlaceOrder({ navigation }) {
         </View>
 
         <View style={styles.form}>
-
-
           <View style={styles.input}>
-          <Text style={styles.inputLabel}>Item</Text>
-          <Text >{title}</Text>
-          <Text style={styles.inputLabel}>Price</Text>
-          <Text>{price}</Text>
-          <Text style={styles.inputLabel}>Quantity</Text>
-          <TextInput
+            <Image source={{ uri: coverImage }} style={styles.cardImage} />
+
+            <Text style={styles.inputLabel}>Item</Text>
+            <Text style={styles.cardTxt}>{title}</Text>
+            <Text style={styles.inputLabel}>Price</Text>
+            <Text style={styles.cardPrice}>{price}</Text>
+            <Text style={styles.inputLabel}>Quantity</Text>
+            <TextInput
               clearButtonMode="while-editing"
               keyboardType="numeric"
               onChangeText={(name) => setForm({ ...form, quantity })}
@@ -79,6 +81,12 @@ export default function PlaceOrder({ navigation }) {
               style={styles.inputControl}
               value={form.description}
             />
+            <TouchableOpacity
+              style={styles.orderbtn}
+              onPress={handleSubmitOrder}
+            >
+              <Text style={styles.btnText}>Place an Order</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -208,5 +216,35 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontWeight: "600",
     color: "#fff",
+  },
+  orderbtn: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    backgroundColor: "#28a745",
+    borderColor: "#28a745",
+    marginBottom: 10,
+  },
+  cardImage: {
+    width: "auto",
+    height: 250,
+    borderRadius: 10,
+  },
+  cardTxt: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#6b7280",
+    marginBottom: 10,
+  },
+  cardPrice: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#28a745", // Green for price to highlight it
+    marginBottom: 10,
   },
 });
