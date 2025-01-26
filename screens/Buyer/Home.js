@@ -35,12 +35,10 @@ const data = [
   },
 ];
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [sellerName, setSellerName] = useState([]);
-
-  const navigation = useNavigation();
 
   const handleScroll = (event) => {
     const index = Math.round(
@@ -54,7 +52,8 @@ const Home = () => {
     price,
     coverImage,
     description,
-    sellerId
+    sellerId,
+    productId
   ) => {
     navigation.navigate("Product", {
       title,
@@ -62,6 +61,7 @@ const Home = () => {
       coverImage,
       description,
       sellerId,
+      productId,
     });
   };
 
@@ -136,7 +136,7 @@ const Home = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("MyProfile");
+                navigation.navigate("BuyerProfile");
               }}
             >
               <Image
@@ -180,13 +180,6 @@ const Home = () => {
 
           <View style={styles.listHeader}>
             <Text style={styles.Title}>Categories</Text>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-            >
-              <Text style={styles.listAction}>View All</Text>
-            </TouchableOpacity>
           </View>
           <ScrollView
             horizontal
@@ -287,7 +280,8 @@ const Home = () => {
                       product.price,
                       product.coverImage,
                       product.description,
-                      product.sellerId
+                      product.sellerId,
+                      product._id
                     )
                   }
                 >

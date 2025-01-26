@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Product = ({ navigation }) => {
   const route = useRoute();
-  const { title, price, coverImage, description, sellerId } = route.params;
+  const { title, price, coverImage, description, productId, sellerId } = route.params;
   // console.log(route.params);
 
   const API_URL = "https://unique-burro-surely.ngrok-free.app/api";
@@ -45,6 +45,10 @@ const Product = ({ navigation }) => {
     }
   };
 
+  const handlePlaceOrder = () => {
+    navigation.navigate("PlaceOrder", { title, price, coverImage, description, productId });
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.header}>
@@ -60,7 +64,7 @@ const Product = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("MyProfile");
+              navigation.navigate("BuyerProfile");
             }}
           >
             <Image
@@ -80,6 +84,8 @@ const Product = ({ navigation }) => {
         <Text style={styles.cardSubtitle}>Rs.{price}</Text>
         <Text style={styles.cardDesc}>{description}</Text>
         <Button title="Chat with Seller" onPress={handleChat} />
+        <Button title="Place an Order" onPress={handlePlaceOrder} />
+
       </View>
     </SafeAreaView>
   );

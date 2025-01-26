@@ -133,7 +133,7 @@ const Search = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("MyProfile");
+              navigation.navigate("BuyerProfile");
             }}
           >
             <Image

@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Orders from "../screens/Seller/Orders";
 import Message from "../screens/Seller/Message";
+import SellerProfile from "../screens/Seller/SellerProfile";
 
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +58,7 @@ const SellerTabNavigation = () => {
       />
       <Tab.Screen
         name="MyProfile"
-        component={MyProfile}
+        component={SellerProfile}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

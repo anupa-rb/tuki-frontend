@@ -216,12 +216,6 @@ export default function BuyerProfile({ navigation }) {
                       <Text style={styles.cardSubtitle}>{company}</Text>
                     </View>
                   </View>
-
-                  <View style={styles.cardFooter}>
-                    <Text style={styles.cardFooterText}>{jobType}</Text>
-
-                    <Text style={styles.cardFooterText}>{years}</Text>
-                  </View>
                 </View>
               </TouchableOpacity>
             ))}

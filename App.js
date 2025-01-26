@@ -20,6 +20,7 @@ import SellerChat from "./screens/Seller/SellerChat";
 import Product from "./screens/Buyer/Product";
 import Categories from "./screens/Buyer/Categories";
 import ViewAllItems from "./screens/Buyer/ViewAllItems";
+import PlaceOrder from "./screens/Buyer/PlaceOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -120,6 +121,11 @@ export default function App() {
         <Stack.Screen
           name="ViewAllItems"
           component={ViewAllItems}
+          options={{ headerShown: false }}
+        />
+                <Stack.Screen
+          name="PlaceOrder"
+          component={PlaceOrder}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
