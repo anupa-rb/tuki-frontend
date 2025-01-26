@@ -69,13 +69,18 @@ export default function SellerProfile({ navigation }) {
 
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/gig/get`);
+        const token = await AsyncStorage.getItem("accessToken");
+        const response = await fetch(`${API_URL}/gig/my`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         console.log(data);
         if (Array.isArray(data.data)) {
           setProducts(data.data); // Update with the correct data
         } else {
-          console.error("Data.products is not an array");
+          console.error("API response is not in the expected format");
         } // Populate the products list
       } catch (error) {
         console.error("Failed to fetch products:", error);
@@ -165,7 +170,7 @@ export default function SellerProfile({ navigation }) {
         <View style={styles.profileTop}>
           <View style={styles.avatar}>
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anupa.png")}
               style={styles.avatarImg}
             />
             <View style={styles.avatarNotification} />

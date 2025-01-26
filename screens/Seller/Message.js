@@ -86,7 +86,7 @@ export default function Message({ navigation }) {
             }}
           >
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anupa.png")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>
@@ -134,6 +134,7 @@ export default function Message({ navigation }) {
                 updatedAt,
               }) => {
                 const participant = buyerID; // Depending on the logged-in user
+                console.log(participant);
                 return (
                   <TouchableOpacity
                     key={conversationID}
@@ -149,7 +150,7 @@ export default function Message({ navigation }) {
                         resizeMode="cover"
                         style={styles.cardImg}
                         source={{
-                          uri: participant?.image || "../../assets/user.jpg",
+                          uri: participant?.profileImage,
                         }}
                       />
 

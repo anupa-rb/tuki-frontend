@@ -23,7 +23,7 @@ const SNotification = () => {
             }}
           >
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anupa.png")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>

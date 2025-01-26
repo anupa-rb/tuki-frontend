@@ -137,7 +137,7 @@ const Search = ({ navigation }) => {
             }}
           >
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anurag.png")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>
