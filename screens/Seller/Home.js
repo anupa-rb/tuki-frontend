@@ -70,7 +70,7 @@ export default function SellerHome({ navigation }) {
             }}
           >
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anupa.png")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>
@@ -86,8 +86,8 @@ export default function SellerHome({ navigation }) {
 
           {/* Active Projects */}
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Active Projects</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Projects")}>
+            <Text style={styles.sectionTitle}>Active Orders</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Orders")}>
               <Text style={styles.viewAll}>View All</Text>
             </TouchableOpacity>
           </View>

@@ -12,7 +12,7 @@ import {
   Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
@@ -25,17 +25,16 @@ const items = [
     years: "2025-01-01",
   },
   {
-    icon:require("../../assets/knitting.jpg"),
+    icon: require("../../assets/knitting.jpg"),
     label: "Knitting",
     company: "Rama Sapkota",
     jobType: "",
     years: "2024-12-15",
   },
-
 ];
 const CARD_WIDTH = Math.min(Dimensions.get("screen").width * 0.75, 400);
 
-export default function BuyerProfile({navigation}) {
+export default function BuyerProfile({ navigation }) {
   const [name, setName] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -43,7 +42,7 @@ export default function BuyerProfile({navigation}) {
     try {
       // Remove the access token from AsyncStorage
       await AsyncStorage.removeItem("accessToken");
-  
+
       // Reset the navigation stack to ensure no back navigation
       navigation.dispatch(
         CommonActions.reset({
@@ -95,7 +94,7 @@ export default function BuyerProfile({navigation}) {
         <View style={styles.profileTop}>
           <View style={styles.avatar}>
             <Image
-              source={require("../../assets/user.jpg")}
+              source={require("../../assets/Anurag.png")}
               style={styles.avatarImg}
             />
             <View style={styles.avatarNotification} />
@@ -106,7 +105,7 @@ export default function BuyerProfile({navigation}) {
             <Text style={styles.profileTitle}>{name}</Text>
 
             <Text style={styles.profileSubtitle}>
-              Buyer{" · "}
+              Buyer
               <Text style={{ color: "#fff" }}></Text>
             </Text>
           </View>
@@ -162,7 +161,7 @@ export default function BuyerProfile({navigation}) {
                 <View style={styles.card}>
                   <View style={styles.cardTop}>
                     <View style={styles.cardIcon}>
-                    <Image source={icon} style={styles.avatarImg} />
+                      <Image source={icon} style={styles.avatarImg} />
                     </View>
                     <View style={styles.cardBody}>
                       <Text style={styles.cardTitle}>{label}</Text>
@@ -209,8 +208,8 @@ export default function BuyerProfile({navigation}) {
                 <View style={styles.card}>
                   <View style={styles.cardTop}>
                     <View style={styles.cardIcon}>
-                    <Image source={icon} style={styles.avatarImg} />
-                    </View>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                      <Image source={icon} style={styles.avatarImg} />
+                    </View>
                     <View style={styles.cardBody}>
                       <Text style={styles.cardTitle}>{label}</Text>
 

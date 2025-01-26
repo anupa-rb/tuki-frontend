@@ -15,7 +15,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // Your API URL
 
-const Search = ({navigation}) => {
+const Search = ({ navigation }) => {
   const [gigs, setGigs] = useState([]);
   const [searchGigText, setSearchGigText] = useState("");
   const [searchErrorText, setSearchErrorText] = useState("");
@@ -137,7 +137,7 @@ const Search = ({navigation}) => {
             }}
           >
             <Image
-              source={require("../../assets/Anupa.png")}
+              source={require("../../assets/Anurag.png")}
               style={styles.avatarMD}
             />
           </TouchableOpacity>

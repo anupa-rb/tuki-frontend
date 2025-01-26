@@ -83,7 +83,7 @@ const ViewAllItems = ({ navigation }) => {
               }}
             >
               <Image
-                source={require("../../assets/user.jpg")}
+                source={require("../../assets/Anurag.png")}
                 style={styles.avatarMD}
               />
             </TouchableOpacity>
@@ -137,7 +137,6 @@ const ViewAllItems = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -152,8 +151,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 9999,
-    borderWidth: 2,
-    borderColor: "#6a99e3", // Add border around avatar for a neat look
+    // borderWidth: 2,
+    // borderColor: "#6a99e3", // Add border around avatar for a neat look
   },
   image: {
     width: 100,
