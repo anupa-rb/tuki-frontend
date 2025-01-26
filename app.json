@@ -4,7 +4,7 @@
     "slug": "tuki",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Splash-01.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,12 +17,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Splash-01.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#DC5440"
-      }
+      },
+      "package": "com.anuparb.tuki"
     },
     "web": {
       "favicon": "./assets/Splash-01.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0cfb949f-b98c-464d-b442-2d262e8d54b1"
+      }
     }
   }
 }
