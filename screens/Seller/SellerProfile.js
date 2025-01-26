@@ -126,9 +126,6 @@ export default function SellerProfile({ navigation }) {
   const handleDeleteYes = async (productId) => {
     try {
       const token = await AsyncStorage.getItem("accessToken");
-      console.log("Token:", token);
-      console.log("API URL:", `${API_URL}/gig/delete/${productId}`);
-
       const response = await fetch(`${API_URL}/gig/delete/${productId}`, {
         method: "DELETE",
         headers: {
@@ -137,21 +134,18 @@ export default function SellerProfile({ navigation }) {
         },
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        console.log("Product deleted:", data);
+      if (response.ok) {
+        // Filter out the deleted product from the state
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product._id !== productId)
+        );
+        console.log("Product deleted successfully.");
       } else {
-        console.log("Product deleted successfully, but no JSON response.");
+        console.error("Failed to delete product:", response.statusText);
       }
     } catch (error) {
       console.error("Failed to delete product:", error);
     }
-    navigation.navigate("Seller Navigation");
   };
 
   return (

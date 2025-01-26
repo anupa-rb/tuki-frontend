@@ -10,12 +10,26 @@ import {
   Button,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { MultiSelect } from "react-native-element-dropdown";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const API_URL = "https://unique-burro-surely.ngrok-free.app/api"; // API URL
+
+const data = [
+  { label: 'Item 1', value: '1' },
+  { label: 'Item 2', value: '2' },
+  { label: 'Item 3', value: '3' },
+  { label: 'Item 4', value: '4' },
+  { label: 'Item 5', value: '5' },
+  { label: 'Item 6', value: '6' },
+  { label: 'Item 7', value: '7' },
+  { label: 'Item 8', value: '8' },
+];
+
 
 export default function AddProduct({ navigation }) {
   const [form, setForm] = useState({
@@ -25,7 +39,7 @@ export default function AddProduct({ navigation }) {
     description: "",
     deliveryTime: "",
   });
-
+  const [selected, setSelected] = useState([]);
   const [image, setImage] = useState();
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
@@ -114,20 +128,18 @@ export default function AddProduct({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
-                <View style={styles.headerBack}>
-            <FeatherIcon
-              color="#1D2A32"
-              name="chevron-left"
-              size={30}
-              onPress={() => {
-                navigation.navigate("Seller Navigation");
-              }}
-            />
-          </View>
+      <View style={styles.headerBack}>
+        <FeatherIcon
+          color="#1D2A32"
+          name="chevron-left"
+          size={30}
+          onPress={() => {
+            navigation.navigate("Seller Navigation");
+          }}
+        />
+      </View>
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.header}>
-
-
           <Text style={styles.title}>Add a New Service</Text>
         </View>
 
@@ -176,7 +188,26 @@ export default function AddProduct({ navigation }) {
               style={styles.inputControl}
               value={form.category}
             />
+            {/* <MultiSelect
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              style={styles.inputControl}
+              search
+              data={data}
+              labelField="label"
+              valueField="value"
+              placeholder="Select item"
+              searchPlaceholder="Search..."
+              value={selected}
+              onChange={(item) => {
+                setSelected(item);
+              }}
+              selectedStyle={styles.selectedStyle}
+            /> */}
           </View>
+
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Delivery Time (Days)</Text>
             <TextInput
@@ -220,7 +251,7 @@ export default function AddProduct({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal:20,
+    paddingHorizontal: 20,
     paddingVertical: 24,
     flexGrow: 1,
     flexShrink: 1,
@@ -272,8 +303,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   headerBack: {
-    paddingHorizontal:5,
-    marginBottom:-15,
-    marginTop:5,
-  }
+    paddingHorizontal: 5,
+    marginBottom: -15,
+    marginTop: 5,
+  },
 });

@@ -14,10 +14,14 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 const Product = ({ navigation }) => {
   const route = useRoute();
-  const { title, price, coverImage, description } = route.params;
+  const { title, price, coverImage, description, productId } = route.params;
 
   const handleChat = () => {
     navigation.navigate("Chat", { conversationID: 1 });
+  };
+
+  const handlePlaceOrder = () => {
+    navigation.navigate("PlaceOrder", { title, price, coverImage, description, productId });
   };
 
   return (
@@ -35,7 +39,7 @@ const Product = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("MyProfile");
+              navigation.navigate("BuyerProfile");
             }}
           >
             <Image
@@ -55,6 +59,8 @@ const Product = ({ navigation }) => {
         <Text style={styles.cardSubtitle}>Rs.{price}</Text>
         <Text style={styles.cardDesc}>{description}</Text>
         <Button title="Chat with Seller" onPress={handleChat} />
+        <Button title="Place an Order" onPress={handlePlaceOrder} />
+
       </View>
     </SafeAreaView>
   );

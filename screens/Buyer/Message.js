@@ -82,7 +82,7 @@ export default function Message({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("MyProfile");
+              navigation.navigate("BuyerProfile");
             }}
           >
             <Image

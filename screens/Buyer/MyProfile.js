@@ -106,7 +106,7 @@ export default function BuyerProfile({navigation}) {
             <Text style={styles.profileTitle}>{name}</Text>
 
             <Text style={styles.profileSubtitle}>
-              Buyer{" · "}
+              Buyer
               <Text style={{ color: "#fff" }}></Text>
             </Text>
           </View>
@@ -216,12 +216,6 @@ export default function BuyerProfile({navigation}) {
 
                       <Text style={styles.cardSubtitle}>{company}</Text>
                     </View>
-                  </View>
-
-                  <View style={styles.cardFooter}>
-                    <Text style={styles.cardFooterText}>{jobType}</Text>
-
-                    <Text style={styles.cardFooterText}>{years}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
