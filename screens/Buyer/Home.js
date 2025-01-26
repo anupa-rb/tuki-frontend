@@ -49,8 +49,20 @@ const Home = () => {
     setCurrentIndex(index);
   };
 
-  const handleProductClick = (title, price, coverImage, description) => {
-    navigation.navigate("Product", { title, price, coverImage, description });
+  const handleProductClick = (
+    title,
+    price,
+    coverImage,
+    description,
+    sellerId
+  ) => {
+    navigation.navigate("Product", {
+      title,
+      price,
+      coverImage,
+      description,
+      sellerId,
+    });
   };
 
   useEffect(() => {
@@ -274,7 +286,8 @@ const Home = () => {
                       product.title,
                       product.price,
                       product.coverImage,
-                      product.description
+                      product.description,
+                      product.sellerId
                     )
                   }
                 >
